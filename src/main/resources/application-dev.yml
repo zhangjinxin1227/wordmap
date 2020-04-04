@@ -1,0 +1,95 @@
+server:
+  port: 9898
+  host: 127.0.0.1
+
+spring:
+
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+      additional-paths: src/main/java #重启目录/
+      exclude: classpath:/templates/
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: utf-8
+
+  mvc:
+    static-path-pattern: /resources/**
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mindmap?autoReconnect=true&useUnicode=true&characterEncoding=utf-8&failOverReadOnly=false&useSSL=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    schema: classpath:springbootsecurityauth.sql
+    sql-script-encoding: utf-8
+    initialization-mode: always
+    driver-class-name: com.mysql.jdbc.Driver
+
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,slf4j
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select '1'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxOpenPreparedStatements: 20
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+  redis:
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 100
+        min-idle: 8
+    timeout: 10000
+    host: localhost
+    post: 6379
+
+  #servlet:
+   # multipart:
+   #   maxFileSize: 50MB
+     # maxRequestSize: 100MB
+    #  location: /opt/data/upload_tmp
+
+ribbon:
+  ReadTimeout: 60000
+  #请求连接的超时时间
+  ConnectTimeout: 50000
+
+
+feign:
+  hystrix:
+    enabled: true
+
+  # jpa 配置
+  jpa:
+    database: mysql
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+#mybatis
+mybatis:
+  type-aliases-package: com.zjx.mapper
+  mapper-locations: classpath:mapper/*.xml
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  returnPageInfo: check

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjx.mapper.UserBeamMapper" >
+  <resultMap id="BaseResultMap" type="com.zjx.model.UserBean" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="user_nick" property="userNick" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="city" property="cityId" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="creat_time" property="createTime" jdbcType="VARCHAR" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, block_number, node_number, grant_token_number, consum_token_number
+  </sql>
+
+  <select id="selectAllByName" resultType="com.zjx.model.UserBean">
+    select
+    id,
+    account,
+    password,
+    user_nick as userNick,
+    email,
+    phone,
+    is_del as isDel,
+    city as cityId,
+    address,
+    creat_time as createTime
+    from user_info
+    where account = #{account}
+    and is_del = 0
+  </select>
+
+  <select id="findRoleByUid" resultType="com.zjx.model.Role">
+    select 
+    r.id,
+    r.role_name as roleName,
+    r.user_id as userId
+    from role r , user_info u
+    where r.user_id = #{id,jdbcType=INTEGER}
+    and r.user_id = u.id
+    and u.is_del = 0
+  </select>
+
+  <select id="findPermissionByUid" resultType="com.zjx.model.Permissions">
+    select
+    p.id,
+    p.permission as permissions,
+    p.role_id as roleId
+    from permission p, role r
+    where
+    r.id = p.role_id
+    and
+    r.user_id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findRoleName" resultType="java.lang.String">
+    select
+    p.id,
+    p.permission as permissions,
+    p.role_id as roleId
+    from role r
+    where
+    r.id = p.role_id
+    and
+    r.user_id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="findPermissionsName" resultType="java.lang.String">
+    select
+    p.id,
+    p.permission as permissions,
+    p.role_id as roleId
+    from permission p, role r
+    where
+    r.id = p.role_id
+    and
+    r.user_id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <!--<insert id="insert" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
+    insert into block_chain (id, block_number, node_number, 
+      grant_token_number, consum_token_number)
+    values (#{id,jdbcType=INTEGER}, #{blockNumber,jdbcType=INTEGER}, #{nodeNumber,jdbcType=INTEGER}, 
+      #{grantTokenNumber,jdbcType=INTEGER}, #{consumTokenNumber,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
+    insert into block_chain
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="blockNumber != null" >
+        block_number,
+      </if>
+      <if test="nodeNumber != null" >
+        node_number,
+      </if>
+      <if test="grantTokenNumber != null" >
+        grant_token_number,
+      </if>
+      <if test="consumTokenNumber != null" >
+        consum_token_number,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="blockNumber != null" >
+        #{blockNumber,jdbcType=INTEGER},
+      </if>
+      <if test="nodeNumber != null" >
+        #{nodeNumber,jdbcType=INTEGER},
+      </if>
+      <if test="grantTokenNumber != null" >
+        #{grantTokenNumber,jdbcType=INTEGER},
+      </if>
+      <if test="consumTokenNumber != null" >
+        #{consumTokenNumber,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
+    update block_chain
+    <set >
+      <if test="blockNumber != null" >
+        block_number = #{blockNumber,jdbcType=INTEGER},
+      </if>
+      <if test="nodeNumber != null" >
+        node_number = #{nodeNumber,jdbcType=INTEGER},
+      </if>
+      <if test="grantTokenNumber != null" >
+        grant_token_number = #{grantTokenNumber,jdbcType=INTEGER},
+      </if>
+      <if test="consumTokenNumber != null" >
+        consum_token_number = #{consumTokenNumber,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
+    update block_chain
+    set block_number = #{blockNumber,jdbcType=INTEGER},
+      node_number = #{nodeNumber,jdbcType=INTEGER},
+      grant_token_number = #{grantTokenNumber,jdbcType=INTEGER},
+      consum_token_number = #{consumTokenNumber,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getAllBlockChain" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from block_chain
+  </select>-->
+</mapper>

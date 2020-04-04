@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="Generator" content="EditPlus®">
+        <meta name="Author" content="">
+        <meta name="Keywords" content="">
+        <meta name="Description" content="">
+        <title>复制粘贴界面</title>
+      <script >
+function copyUrl2()
+    {
+      
+       var oInput = document.createElement('input');
+       oInput.value = "84+41";
+      
+       document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.className = 'oInput';  //创建示例
+        oInput.style.display='none'; //将并将示例隐藏
+        alert('复制成功');
+    }
+</script>
+    </head>
+    <body>
+<div  onClick="copyUrl2()" value="点击复制代码">点击复制代码</div>
+<div onClick="copyUrl1()">oahduhefh</div>                                                                                                                   
+    </body>
+</html>
