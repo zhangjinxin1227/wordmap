@@ -37,7 +37,7 @@
         function login(){
         	
         	var adata={
-                    "account":$("#input").val(),
+                    "user":$("#input").val(),
                     "password":$("#password").val(),
                     "verifyImage":$("#verifyCode").val(),
                 };
@@ -47,7 +47,7 @@
                     type:"POST",
                     contentType:"application/json",
                     data:data,
-                    url:"/auth/user/login",
+                    url:"/login/loginCheck2",
                     success:function(data) {
      
                         if (data.Status == "NotHaveUser" || data.Status == "PasswordError") {

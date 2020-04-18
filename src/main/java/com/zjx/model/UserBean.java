@@ -3,18 +3,21 @@ package com.zjx.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 @Data
-public class UserBean {
+public class UserBean implements Serializable {
+
+    private static final long serialVersionUID = 2513959756853027289L;
 
     private Integer id;//主键
 
     private String account;//账号
 
-    private String userNick;//姓名
+    private String name;//姓名
 
     private String password;//密码
 
@@ -29,7 +32,4 @@ public class UserBean {
     private String address;
 
     private String createTime;//创建时间
-    /**
-     * 用户对应的角色集合
-     */
 }

@@ -4,85 +4,114 @@
   <resultMap id="BaseResultMap" type="com.zjx.model.UserBean" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="account" property="account" jdbcType="VARCHAR" />
-    <result column="user_nick" property="userNick" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="is_del" property="isDel" jdbcType="INTEGER" />
     <result column="city" property="cityId" jdbcType="INTEGER" />
     <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="creat_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="created_time" property="createTime" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
     id, block_number, node_number, grant_token_number, consum_token_number
   </sql>
 
-  <select id="selectAllByName" resultType="com.zjx.model.UserBean">
+  <select id="getUserInfo" resultType="com.zjx.model.UserBean">
     select
     id,
     account,
     password,
-    user_nick as userNick,
+    name as name,
     email,
     phone,
     is_del as isDel,
     city as cityId,
     address,
-    creat_time as createTime
-    from user_info
+    created_time as createTime
+    from um_t_user
     where account = #{account}
+    and password = #{password}
     and is_del = 0
   </select>
 
-  <select id="findRoleByUid" resultType="com.zjx.model.Role">
-    select 
-    r.id,
-    r.role_name as roleName,
-    r.user_id as userId
-    from role r , user_info u
-    where r.user_id = #{id,jdbcType=INTEGER}
-    and r.user_id = u.id
-    and u.is_del = 0
-  </select>
-
-  <select id="findPermissionByUid" resultType="com.zjx.model.Permissions">
+  <select id="getUserByNickname" resultType="com.zjx.model.UserBean">
     select
-    p.id,
-    p.permission as permissions,
-    p.role_id as roleId
-    from permission p, role r
-    where
-    r.id = p.role_id
-    and
-    r.user_id = #{id,jdbcType=INTEGER}
+    id,
+    account,
+    password,
+    name as name,
+    email,
+    phone,
+    is_del as isDel,
+    city as cityId,
+    address,
+    created_time as createTime
+    from um_t_user
+    where account = #{name}
+    and is_del = 0
   </select>
 
-  <select id="findRoleName" resultType="java.lang.String">
-    select
-    p.id,
-    p.permission as permissions,
-    p.role_id as roleId
-    from role r
-    where
-    r.id = p.role_id
-    and
-    r.user_id = #{id,jdbcType=INTEGER}
+  <insert id="saveUser" parameterType="com.zjx.model.UserBean" >
+    insert into um_t_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="cityId != null" >
+        city,
+      </if>
+      creat_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=INTEGER},
+      </if>
+      NOW()
+    </trim>
+  </insert>
+
+  <select id="getCityInfo" resultType="com.zjx.model.City">
+    SELECT
+    c.city_id as cityId,
+    c.city_name as cityName
+    FROM
+    city c
+    WHERE
+    1=1
   </select>
-
-    <select id="findPermissionsName" resultType="java.lang.String">
-    select
-    p.id,
-    p.permission as permissions,
-    p.role_id as roleId
-    from permission p, role r
-    where
-    r.id = p.role_id
-    and
-    r.user_id = #{id,jdbcType=INTEGER}
-  </select>
-
-
+</mapper>
   <!--<insert id="insert" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
     insert into block_chain (id, block_number, node_number, 
       grant_token_number, consum_token_number)
@@ -157,4 +186,3 @@
     <include refid="Base_Column_List" />
     from block_chain
   </select>-->
-</mapper>
