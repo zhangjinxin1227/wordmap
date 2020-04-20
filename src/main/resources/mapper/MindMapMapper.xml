@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjx.mapper.MindMapMapper" >
+  <resultMap id="BaseResultMap" type="com.zjx.model.MindMap" >
+    <id column="map_id" property="mapId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="node_name" property="rootName" jdbcType="VARCHAR" />
+    <result column="data" property="data" jdbcType="LONGTEXT" />
+    <result column="maplist" property="mapList" jdbcType="LONGTEXT" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="is_share" property="isShare" jdbcType="INTEGER" />
+    <result column="share_time" property="shareTime" jdbcType="TIMESTAMP" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    map_id, user_id, create_time, node_name, data , maplist , update_time , is_del , is_share , share_time
+  </sql>
+
+  <insert id="saveMindMap" parameterType="com.zjx.model.MindMap" >
+    insert into mind_map
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mapId != null" >
+        map_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="rootName != null" >
+        node_name,
+      </if>
+      <if test="data != null" >
+        data,
+      </if>
+      <if test="mapList != null" >
+        maplist,
+      </if>
+      is_del,
+      is_share
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mapId != null" >
+        #{mapId},
+      </if>
+      <if test="userId != null" >
+        #{userId},
+      </if>
+      <if test="rootName != null" >
+        #{rootName,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null" >
+        #{data},
+      </if>
+      <if test="mapList != null" >
+        #{mapList},
+      </if>
+      0,
+      0
+    </trim>
+  </insert>
+
+  <select id="getMindMap" resultType="com.zjx.model.MindMap">
+    SELECT
+	m.map_id as mapId,
+	m.user_id userId,
+	m.node_name as nodeName,
+	m.`data` as data,
+	m.maplist as mapList
+    FROM
+	mind_map m
+    WHERE
+	m.map_id = #{rootId}
+    AND m.is_del = 0
+  </select>
+
+  <update id="updateMindMap" parameterType="com.zjx.model.MindMap">
+    update mind_map
+    <set>
+      <if test="data != null" >
+        data = #{data},
+      </if>
+      <if test="mapList != null" >
+        maplist = #{mapList},
+      </if>
+      update_time = NOW()
+    </set>
+    where map_id = #{mapId}
+    and is_del = 0
+  </update>
+
+  <update id="deleteMap">
+    update mind_map
+    set
+    is_del = 1,
+    update_time = NOW()
+    where map_id = #{rootId}
+  </update>
+
+  <select id="getMapList" resultType="com.zjx.model.MindMap">
+    SELECT
+    m.map_id as mapId,
+    m.node_name as nodeName,
+    m.user_id as userId,
+    m.is_share as isShare
+    FROM
+    mind_map m
+    WHERE
+    m.user_id = #{userId}
+    AND
+    m.is_del = 0
+  </select>
+  
+  <update id="shareMap">
+    update mind_map
+    set
+    share_time = NOW(),
+    is_share = 1,
+    where
+    map_id = #{rootId}
+    and
+    is_del = 0
+  </update>
+
+  <update id="deleteshareMap">
+    update mind_map
+    set
+    share_time = null,
+    is_share = 0,
+    where
+    map_id = #{rootId}
+    and
+    is_del = 0
+  </update>
+
+  <select id="getShareMapList" resultType="com.zjx.model.MindMap">
+    SELECT
+    m.map_id as mapId,
+    m.node_name as nodeName,
+    m.user_id as userId,
+    m.is_share as isShare,
+    m.share_time as shareTime
+    FROM
+    mind_map m
+    WHERE
+    m.user_id = #{userId}
+    AND
+    m.is_del = 0
+    and
+    m.is_share = 1
+  </select>
+</mapper>

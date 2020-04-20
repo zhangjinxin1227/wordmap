@@ -5,13 +5,13 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="Page-Enter" content="blendTrans(Duration=2.0)">
-    <title>毛线头</title>
+    <title>可视化学习数据管理系统</title>
     
-    <link rel="stylesheet" href="bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="css/index/style.css">
-      <script type="text/javascript" src="js/jquery.min2.1.4.js" ></script>
+    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/index/style.css">
+      <script type="text/javascript" src="/js/jquery.min2.1.4.js" ></script>
       <!-- <script src="js/jquery.3.3.1.js"></script> -->
-    <script type="text/javascript" src="js/bootstrap.min.js" ></script>  <!-- 首页面样式 -->
+    <script type="text/javascript" src="/js/bootstrap.min.js" ></script>  <!-- 首页面样式 -->
 <style type="text/css">
 .main-container .page-content{
 background: transparent;
@@ -53,7 +53,7 @@ background: transparent;
         $.ajax({
             type: "POST",
             contentType:"application/json",
-            url: "iflogin.do",
+            url: "/login/iflogin",
             data: data,
             dataType: "json",
             success: function(data){
@@ -156,7 +156,7 @@ background: transparent;
         <div class="row navbar-fixed-top" style="width: 100%;margin-left: 0;" id="tp">
             <div class="col-md-7">
                 <p id="logo_o" class="logo_n"><a style="color:#D5362A;text-decoration: none;
-                ">毛</a>线头 </p>
+                ">可视化学习</a>数据管理系统 </p>
             </div>
             <div class="col-md-5 text-center" style="display: flex">
                 
@@ -553,7 +553,7 @@ $(function () {
                 </div>
                 <div class="navimg"><div><a class="a_now" href="index.do">首&nbsp;&nbsp;页</a></div></div>
                 <div class="navimg"><a href="view.do">资&nbsp;&nbsp;源</a></div>
-                <div class="navimg" style="white-space:nowrap;"><a href="mindMap.do">知识图谱</a></div>
+                <div class="navimg" style="white-space:nowrap;"><a href="/mindMap/mindmap">知识图谱</a></div>
                 <div class="navimg"><a href="study.do">学&nbsp;&nbsp;习</a></div>
 				<div class="navimg" id='nickname'>
 	                <div class="btn-group" style="back">
@@ -596,7 +596,7 @@ $(function () {
         <div id="view">
         <div class="row" style="height:605px;width: 100%;margin-left: 0;">
             <div class="col-md-10 col-md-offset-1 get-it" style="height: 300px;margin-top: 5vh;">
-                <h1 class="logo">毛线头</h1>
+                <h1 class="logo">可视化学习数据管理系统</h1>
                 <p class="top_s">A new idea of learning</p>
                 <p class="top_p">Easy to use documentation mind graph real-time collaborative editing.</p>
                 <center><button onclick="window.location.href='register.do'" class="signup-btn 
@@ -620,10 +620,10 @@ $(function () {
     <!-- 动图模块(第一部分)左 -->
     <div class="row" style="width: 100%;margin-left: 0;padding-bottom: 50px;">
         <div class="col-md-6">
-            <img src="images/gif/GIF1.gif" style="max-width: 100%;height: auto;border:solid 1px #CCC; box-shadow: #E8E8E8 3px 4px 10px 0;">
+            <img src="/images/gif/GIF1.gif" style="max-width: 100%;height: auto;border:solid 1px #CCC; box-shadow: #E8E8E8 3px 4px 10px 0;">
         </div>
         <div class="col-md-6 text-center" style="font-family:'方正舒体';margin-bottom:20px;">
-            <h2>毛线头</h2><h3>Knowledge Graph</h3>
+            <h2>可视化学习数据管理系统</h2><h3>Knowledge Graph</h3>
         </div>
         <div class="txt" style="font-family:'华文楷体'"><p>构建清晰而个性化的知识体系.
                       致力于将抽象的内容转换为更为清晰的图结构.</p>
@@ -640,7 +640,7 @@ $(function () {
     padding-top: 50px;padding-bottom: 50px;">
         <div class="col-md-6">
            <div class="text-center" style="font-family:'方正舒体'">
-            <h2>毛线头</h2><h3>Knowledge Point</h3>
+            <h2>可视化学习数据管理系统</h2><h3>Knowledge Point</h3>
         </div>
         <div class="txt" style="font-family:'华文楷体'">
         <p>知识点描述基于Mind Map的每个节点</p>
@@ -649,7 +649,7 @@ $(function () {
         </div>
         </div>
         <div class="col-md-6 text-center">
-            <img src="images/gif/GIF3.gif" style=" max-width: 100%;height: auto;border:solid 1px #CCC;
+            <img src="/images/gif/GIF3.gif" style=" max-width: 100%;height: auto;border:solid 1px #CCC;
             box-shadow: #E8E8E8 3px 4px 10px 0;">
         </div>
     </div>
@@ -659,12 +659,12 @@ $(function () {
     <!-- 动图模块(第三部分)左 -->
     <div class="row" style="width: 100%;margin-left: 0;    padding-top: 50px;padding-bottom: 50px;">
         <div class="col-md-6">
-            <img src="images/gif/GIF2.gif" style="max-width: 100%;height: auto;border:solid 1px #CCC;
+            <img src="/images/gif/GIF2.gif" style="max-width: 100%;height: auto;border:solid 1px #CCC;
             box-shadow: #E8E8E8 3px 4px 10px 0;">
         </div>
         <div class="col-md-6">
         <div class="text-center" style="font-family:'方正舒体'">
-            <h2>毛线头</h2><h3>Mind Share</h3>
+            <h2>可视化学习数据管理系统</h2><h3>Mind Share</h3>
         </div>
         <div class="txt" style="font-family:'华文楷体'"><p>知识图谱分享.</p>
         <p>可快速的根据知识图谱的名字和用户的ID，搜索到知识图谱社区中分享过的知识图谱</p>
@@ -782,7 +782,7 @@ $(function () {
         </div>
         <div class="col-md-4 col-sm-6 motivation-item">
             <p style="font-size: 24px"><a style="color:#D5362A;text-decoration: none;">关于</a>我们:</p><p>&nbsp;</p>
-            <p class="links" style="font-size: 15px">毛线头是一个以知识图谱为主的在线学习系统,用<p>&nbsp;</p>户可根据自己的需求绘制个性化的知识图谱，构建清<p>&nbsp;</p>晰的知识体系.</p>
+            <p class="links" style="font-size: 15px">可视化学习数据管理系统是一个以知识图谱为主的在线学习系统,用<p>&nbsp;</p>户可根据自己的需求绘制个性化的知识图谱，构建清<p>&nbsp;</p>晰的知识体系.</p>
         </div>
         <div class="col-md-4 col-sm-6 motivation-item">
             <p style="font-size: 24px"><a style="color:#D5362A;text-decoration: none;">联系</a>我们:</p><p>&nbsp;</p>

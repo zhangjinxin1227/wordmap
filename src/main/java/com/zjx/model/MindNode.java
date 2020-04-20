@@ -12,6 +12,8 @@ public class MindNode implements Serializable {
 
     private String nodeName;//节点名称
 
+    private String rootId;//根节点id
+
     private String parentId;//父节点id
 
     private Integer userId;//用户id
@@ -23,4 +25,6 @@ public class MindNode implements Serializable {
     private Integer isDel;//是否删除
 
     private Integer color;//颜色
+
+    private String zsdms;//知识点描述
 }

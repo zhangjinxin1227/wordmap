@@ -32,7 +32,12 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping(value={"/","index.do"})
-	public String index(){
+	public String index(HttpServletRequest request){
+		//咱是先把用户信息放入session
+		HttpSession session = request.getSession();
+		session.setAttribute("userId","2");
+		session.setAttribute("account","jinxin");
+		session.setAttribute("userName","张金鑫");
 		return "index";
 	}
 

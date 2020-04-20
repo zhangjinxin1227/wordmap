@@ -1,26 +1,19 @@
 package com.zjx.config;
 
-import com.zjx.domain.CustomUserDetail;
-import com.zjx.entity.User;
-import com.zjx.repository.UserRepository;
+import com.zjx.service.impl.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 /**
  * @description Security核心配置
@@ -28,12 +21,9 @@ import java.util.List;
  */
 @Configuration
 @EnableWebSecurity
-@Slf4j
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Bean
     @Override
@@ -41,42 +31,65 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public RestTemplate restTemplate(){
-        return new RestTemplate();
-    }
-
-    @Bean
     @Override
-    protected UserDetailsService userDetailsService() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return new UserDetailsService(){
-            @Override
-            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                log.info("username:{}",username);
-                //User user = userRepository.findUserByAccount(username);
-                List<User> list2=userRepository.findUserByAccount(username);
-                User user=null;
-                if(list2!=null&&list2.size()>0){
-                    user=list2.get(list2.size()-1);
-                }
-                if(user != null){
-                    CustomUserDetail customUserDetail = new CustomUserDetail();
-                    customUserDetail.setUsername(user.getAccount());
-                    customUserDetail.setPassword("{bcrypt}"+bCryptPasswordEncoder.encode(user.getPassword()));
-                    List<GrantedAuthority> list = AuthorityUtils.createAuthorityList(user.getRole().getRole());
-                    customUserDetail.setAuthorities(list);
-                    return customUserDetail;
-                }else {//返回空
-                    return null;
-                }
+    public void configure(HttpSecurity http) throws Exception {
+        http.headers().frameOptions().disable();
+        http.csrf().disable();// 取消CSRF
+        http.authorizeRequests().antMatchers(   // 允许对于网站静态资源的无授权访问
 
-            }
-        };
+                "/static/**",
+                "/templates/**",
+                "/**/*",
+                "/**/*.html",
+                "/**/*.woff2",
+                "/**/*.jpg",
+                "/**/*.png",
+                "/**/*.gif",
+                "/**/*.css",
+                "/**/*.js",
+                "/**/*.json",
+                "/index/testLogin.do",
+                "/login/*",
+                "/index/getVerifyCode.do"
+
+
+        ).permitAll()
+                //其他地址的访问均需验证权限
+                .anyRequest().authenticated()
+                //指定登录页是"/login"
+                .and().formLogin().loginPage("/testLogin.do")
+                //登录成功后默认跳转到"/main.do?url=tab.do"
+                .defaultSuccessUrl("/index.do").permitAll()
+                //退出登录后的默认url是"/home"
+                .and().logout().logoutSuccessUrl("/index.do").permitAll();
+
     }
 
+    //@Bean
+    //public RestTemplate restTemplate(){
+    //    return new RestTemplate();
+    //}
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailsService());
+    }
+
+    @Override
     @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    public UserDetailsService userDetailsService() {
+        UserDetailsService userDetailsService = username -> null;
+        return userDetailsService;
+    }
+
+    //自定义UserDetailsService，从数据库中读取用户信息
+    @Bean
+    public UserDetailsServiceImpl customUserDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
+    //装载BCrypt密码编码器
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

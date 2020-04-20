@@ -5,27 +5,27 @@
 <meta name="renderer" content="webkit">
 <title>知识图谱</title>
 
-<link type="text/css" rel="stylesheet" href="mindmap/jsmind.css">
-<link rel="stylesheet" type="text/css" href="mindmap/easyui.css">
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="999/zeroModal.css" >
+<link type="text/css" rel="stylesheet" href="/mindmap/jsmind.css">
+<link rel="stylesheet" type="text/css" href="/mindmap/easyui.css">
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/999/zeroModal.css" >
 
-<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
 <link rel="stylesheet" href="/ifont/css/font-awesome.min.css" />
-<link rel="stylesheet" href="mindmap/ace.min.css" />
-<link rel="stylesheet" type="text/css" href="mindmap/style.css" />
-<link rel="stylesheet" type="text/css" href="mindmap/noJS.css" />
-<link rel="stylesheet" type="text/css" href="css/index/mindMap.css" />
-<link rel="stylesheet" href="css/index/style.css">
+<link rel="stylesheet" href="/mindmap/ace.min.css" />
+<link rel="stylesheet" type="text/css" href="/mindmap/style.css" />
+<link rel="stylesheet" type="text/css" href="/mindmap/noJS.css" />
+<link rel="stylesheet" type="text/css" href="/css/index/mindMap.css" />
+<link rel="stylesheet" href="/css/index/style.css">
 </head>
 
 	<!-- js文件加载和css head里主要是用来响应调用  body里用来渲染界面 -->
- 	<script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
-	<script src="mindmap/jquery.easyui.min.js" type="text/javascript"></script>
-	<script src="mindmap/jsmind.js" type="text/javascript"></script>
-	<script src="mindmap/jsmind.draggable.js" type="text/javascript"></script> 
-	<script type="text/javascript" src="mindmap/jsmind.screenshot.js"></script>
-	<script type="text/javascript" src="999/zeroModal.min.js"></script>
+ 	<script src="/js/jquery-1.7.2.min.js" type="text/javascript"></script>
+	<script src="/mindmap/jquery.easyui.min.js" type="text/javascript"></script>
+	<script src="/mindmap/jsmind.js" type="text/javascript"></script>
+	<script src="/mindmap/jsmind.draggable.js" type="text/javascript"></script>
+	<script type="text/javascript" src="/mindmap/jsmind.screenshot.js"></script>
+	<script type="text/javascript" src="/999/zeroModal.min.js"></script>
 
 	
 	<style type="text/css">
@@ -873,7 +873,7 @@
 		/* 根据点击获取子节点的type，显示不同的菜单  */
 		$("jmnode").live('click', function(e) {
 				       
-		 var a = "summer.do";
+		 var a = "/mindMap/summer";
 			_iframe(a);
 		});
 		
@@ -1861,18 +1861,7 @@
 	    <button type="button" style="height:35px;border: 1px solid transparent;border-radius: 0 5px 5px 0 !important;background-color:#1abc9c;position: fixed; bottom: 10px; right: 15px;" onclick="send()">发送消息</button>
 	</div> 
     <div class="rightbtn" id="btn2" title="显示聊天界面"></div>
-    
-	
-	<!-- 微信侧边栏，图片展示  -->
-	<div id="app_weixin" class="none" style="position: fixed;z-index:200001;">	    
-	    <div class="none" id="btn_weixin" title="隐藏图片" style="top:66%width: 200px"></div>	    
-	    <!-- 聊天对话显示框 -->
- 		  <div id="message" style="height:93%;width:100%;OVERFLOW:auto; overflow-x:auto;overflow-y:auto">
-	    	<iframe src="weixin_photos.html"  style="height:100%;width:100%" scrolling="no" frameborder="0" ></iframe>
-	    </div>
-	</div> 
-	
-    <div class="rightbtn" id="btn2_weixin" title="显示图片" style="top:66%;z-index:200000;" >
+
     	
    </div>
 	 <script>
@@ -1894,28 +1883,7 @@
                 oBtn.className="leftbtn";
                 link();
             }
-            
-      
       </script>
-	<script>
-		var oApp_weixin = document.getElementById('app_weixin');
-		var oBtn_weixin = document.getElementById('btn_weixin');
-		var oBtn2_weixin = document.getElementById('btn2_weixin');
-		
-		oBtn_weixin.onclick=function(){
-			oApp_weixin.className="none";
-			oBtn2_weixin.className="rightbtn"
-		}
-		
-		oBtn2_weixin.onclick=function(){
-			oApp_weixin.className="app";
-			oBtn2_weixin.className="none";
-			oBtn_weixin.className="leftbtn";
-			
-		}
-		
-		
-	</script>
 
 	
 	

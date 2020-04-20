@@ -1,6 +1,5 @@
 package com.zjx.config;
 
-import com.zjx.handler.CustomAuthExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +19,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
+
+import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author Zhifeng.Zeng
  * @description OAuth2服务器配置
  */
-@Configuration
+/*@Configuration
 public class OAuth2Config {
 
     public static final String ROLE_ADMIN = "ADMIN";
@@ -36,12 +37,12 @@ public class OAuth2Config {
     //访问客户端ID
     public static final String CLIENT_ID = "client_1";
     //鉴权模式
-    public static final String GRANT_TYPE[] = {"password", "refresh_token"};
+    public static final String GRANT_TYPE[] = {"password", "refresh_token"};*/
 
     /**
      * @description 资源服务器
      */
-    @Configuration
+/*    @Configuration
     @EnableResourceServer
     protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
@@ -53,7 +54,7 @@ public class OAuth2Config {
             resources.stateless(false)
                     .accessDeniedHandler(customAuthExceptionHandler)
                     .authenticationEntryPoint(customAuthExceptionHandler);
-        }
+        }*/
 
         /*@Override
         public void configure(HttpSecurity http) throws Exception {
@@ -78,30 +79,28 @@ public class OAuth2Config {
 
         }*/
 
-        @Override
+        /*@Override
         public void configure(HttpSecurity http) throws Exception {
             http.headers().frameOptions().disable();
             http.csrf().disable();// 取消CSRF
             http.authorizeRequests().antMatchers(   // 允许对于网站静态资源的无授权访问
+*/
+             //       "/static/**",
+             //       "/templates/**",
 
-                    "/static/**",
-                    "/templates/**",
+             //       "/**/*.html",
+             //       "/**/*.woff2",
+             //       "/**/*.jpg",
+             //       "/**/*.png",
+             //       "/**/*.gif",
+             //       "/**/*.css",
+              //      "/**/*.js",
+              //      "/**/*.json",
+              //      "/index/testLogin.do",
+              //      "/login/*",
+              //      "/index/getVerifyCode.do"
 
-                    "/**/*.html",
-                    "/**/*.woff2",
-                    "/**/*.jpg",
-                    "/**/*.png",
-                    "/**/*.gif",
-                    "/**/*.css",
-                    "/**/*.js",
-                    "/**/*.json",
-                    "/index/testLogin.do",
-                    "/auth/user/login",
-                    "/aouth/*",
-                    "/aouth/token",
-                    "/index/getVerifyCode.do"
-
-
+/*
             ).permitAll()
                     //其他地址的访问均需验证权限
                     .anyRequest().authenticated()
@@ -113,19 +112,19 @@ public class OAuth2Config {
                     .and().logout().logoutSuccessUrl("/index.do").permitAll();
 
         }
-    }
+    }*/
 
     /**
      * @description 认证授权服务器
      */
-    @Configuration
+   /* @Configuration
     @EnableAuthorizationServer
     protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
         @Autowired
         private AuthenticationManager authenticationManager;
 
-        @Autowired
+        @Resource
         private RedisConnectionFactory connectionFactory;
 
         @Override
@@ -145,15 +144,15 @@ public class OAuth2Config {
             return new RedisTokenStore(connectionFactory);
         }
 
-        /**
+        *//**
          * @param endpoints
          * @description token及用户信息存储到redis，当然你也可以存储在当前的服务内存，不推荐
-         */
+         *//*
         @Override
         public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
             //token信息存到服务内存
-            /*endpoints.tokenStore(new InMemoryTokenStore())
-                    .authenticationManager(authenticationManager);*/
+            *//*endpoints.tokenStore(new InMemoryTokenStore())
+                    .authenticationManager(authenticationManager);*//*
 
             //token信息存到redis
             endpoints.tokenStore(redisTokenStore()).authenticationManager(authenticationManager);
@@ -178,5 +177,6 @@ public class OAuth2Config {
                     .checkTokenAccess("permitAll()");
         }
 
-    }
-}
+    }*/
+
+//}

@@ -109,7 +109,7 @@ public class LoginController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		HttpSession session = request.getSession();
 		Object nickname = session.getAttribute("username");
-		map.put("nickname", nickname);
+		map.put("nickname", "jinxin");
 		map.put("status", Integer.valueOf(1));
 		return this.jsonAnalyze.map2Json(map);
 	}
