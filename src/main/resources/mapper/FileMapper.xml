@@ -23,6 +23,90 @@
     set
     id_del = 1,
     update_time = NOW()
-    where map_id = #{nodeId}
+    where node_id = #{nodeId}
   </update>
+
+  <update id="deleteFileId">
+    update
+    file
+    set
+    id_del = 1,
+    update_time = NOW()
+    where file_id = #{fileId}
+  </update>
+
+  <insert id="insertNodeFile" parameterType="com.zjx.model.UploadFile"  useGeneratedKeys="true" keyProperty="file_id">
+    insert into file
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="filePath != null" >
+        file_path,
+      </if>
+      <if test="fileType != null" >
+        file_type,
+      </if>
+      <if test="nodeId != null" >
+        node_id,
+      </if>
+      is_del
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId},
+      </if>
+      <if test="fileName != null" >
+        #{fileName},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType},
+      </if>
+      <if test="nodeId != null" >
+        #{nodeId},
+      </if>
+      0
+    </trim>
+  </insert>
+
+  <!--<insert id="insertNodeFileContact">
+    insert into node_file
+    (node_id , file_id) values (#{nodeId} , #{fileId})
+  </insert>-->
+
+  <select id="getUploadeFile" resultType="com.zjx.model.UploadFile">
+    SELECT
+    f.file_id as fileId,
+    f.file_name as fileName,
+    f.file_path as filePath,
+    f.file_type as fileType,
+    f.node_id as nodeId
+    FROM
+    file f
+    WHERE
+    f.node_id = #{nodeId}
+    AND
+    f.is_del = 0
+  </select>
+
+  <select id="getUserUploadeFile" resultType="com.zjx.model.UploadFile">
+    SELECT
+    f.file_id as fileId,
+    f.file_name as fileName,
+    f.file_path as filePath,
+    f.file_type as fileType,
+    f.node_id as nodeId
+    FROM
+    file f
+    WHERE
+    f.user_id = #{userId}
+    AND
+    f.is_del = 0
+  </select>
 </mapper>

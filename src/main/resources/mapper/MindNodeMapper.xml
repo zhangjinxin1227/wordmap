@@ -33,4 +33,27 @@
     WHERE
     node_id = #{nodeId}
   </delete>
+
+  <update id="saveMapZsd" parameterType="com.zjx.model.MindNode">
+    update
+    mindnode
+    set
+    zsdms = #{zsdms},
+    update_time = NOW()
+    where node_id = #{nodeId}
+    and is_del = 0
+  </update>
+
+  <select id="getNodems" resultType="com.zjx.model.MindNode">
+    SELECT
+    m.zsd_ms as zsdms,
+    m.node_name as nodeName,
+    m.node_id as nodeId
+    FROM
+    mindnode m
+    where
+    m.node_id = #{nodeId}
+    AND
+    m.is_del = 0
+  </select>
 </mapper>

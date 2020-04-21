@@ -10,4 +10,8 @@ public interface MindNodeService {
 
     List<MindNode> getNope(List<MindNode> less, List<MindNode> more );
 
+    Integer saveMapZsd(MindNode mindNode);
+
+    MindNode getNodems(String nodeId);
+
 }

@@ -46,4 +46,24 @@ public class MindNodeServiceImpl implements MindNodeService {
         }
         return target;
     }
+
+    /**
+     * 保存知识点描述
+     * @param mindNode
+     * @return
+     */
+    @Override
+    public Integer saveMapZsd(MindNode mindNode){
+        return mindNodeMapper.saveMapZsd(mindNode);
+    }
+
+    /**
+     * 保存知识点描述
+     * @param nodeId
+     * @return
+     */
+    @Override
+    public MindNode getNodems(String nodeId){
+        return mindNodeMapper.getNodems(nodeId);
+    }
 }

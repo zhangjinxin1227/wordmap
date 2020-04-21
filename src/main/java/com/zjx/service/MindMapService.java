@@ -27,4 +27,6 @@ public interface MindMapService {
     Integer deleteshareMap(String rootId);
 
     List<MindMap> getShareMapList(String userId);
+
+    String openChildMap(List<MindNode> list,String nodeid ,String rootid) throws IOException;
 }
