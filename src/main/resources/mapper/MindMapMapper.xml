@@ -6,8 +6,8 @@
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="node_name" property="rootName" jdbcType="VARCHAR" />
-    <result column="data" property="data" jdbcType="LONGTEXT" />
-    <result column="maplist" property="mapList" jdbcType="LONGTEXT" />
+    <result column="data" property="data" jdbcType="LONGVARCHAR" />
+    <result column="maplist" property="mapList" jdbcType="LONGVARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="is_del" property="isDel" jdbcType="INTEGER" />
     <result column="is_share" property="isShare" jdbcType="INTEGER" />

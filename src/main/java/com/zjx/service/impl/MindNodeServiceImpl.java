@@ -15,7 +15,7 @@ public class MindNodeServiceImpl implements MindNodeService {
     private MindNodeMapper mindNodeMapper;
 
     //删除节点，并删除nodeFile表对应的数据
-    @Resource
+    @Override
     public Integer deleteNode(String nodeId){
         Integer i = mindNodeMapper.deleteNode(nodeId);
         if(i > 0){

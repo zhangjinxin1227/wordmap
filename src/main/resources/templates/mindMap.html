@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="renderer" content="webkit">
 <title>知识图谱</title>
 
@@ -41,11 +41,10 @@
 		    background: rgba(244, 242, 240, 0.48) !important;  /* 固定导航栏样式 */
 		   }
 		.main-container:after,.top{
-		   /* background: -webkit-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
+		   background: -webkit-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
 		   background: -o-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
 		   background: -moz-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
-		   background: -ms-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6); */
-		   background:EEECE1;
+		   background: -ms-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
 		}   
 		
 		.table-hover > tbody > tr:hover {
@@ -140,7 +139,7 @@
 		
 		$.ajax({
 			type : "POST",
-			url : "openShareMap.do",  //打开具体的思维导图
+			url : "/mindMap/openShareMap",  //打开具体的思维导图
 			data : da,
 			success : function(data) {
 				var json = $.parseJSON(data);
@@ -169,7 +168,7 @@
 			var da={"nodeid":kcmc};
 			    $.ajax({
 					type : "POST",
-					url : "openMyMap.do", //获取属于自己的某个思维导图
+					url : "/mindMap/openMyMap", //获取属于自己的某个思维导图
 					data : da,
 					success : function(data) {
 						var json = $.parseJSON(data);
@@ -192,35 +191,34 @@
 		
 		
 		   <!-- 分享思维导图上方操作 -->
-			function sharemindmap(){
-		    	
-		    	var rootid = document.getElementById('nodeid').value; //从打开历史记录里直接获取
-		    	var da={"rootid":rootid};
-				        $.ajax({
-					        type : "POST",
-							url : "shareMap.do",
-							data : da,
-							success : function(data) {
-								var json = $.parseJSON(data);
-								
-								if (json.a == "1") {
-									$.messager.alert("操作提示", "分享成功！", "info");			  
-								}else if(json.a=="3"){
-									$.messager.alert("操作失败","已分享过该知识图谱","info");
-								} else if(json.a=="2"){
-									$.messager.alert("操作失败","请登录后再操作","info");
-								} else if(json.a=="5"){
-									$.messager.alert("操作失败","不是您的知识图谱","info");
-								} else {
-									$.messager.alert("操作提示", "请选择知识图谱！", "info");
-								}
-							},
+			function sharemindmap() {
+
+				var rootid = document.getElementById('nodeid').value; //从打开历史记录里直接获取
+				var da = {"rootid": rootid};
+				$.ajax({
+					type: "POST",
+					url: "/mindMap/shareMap",
+					data: da,
+					success: function (data) {
+						var json = $.parseJSON(data);
+
+						if (json.a == "1") {
+							$.messager.alert("操作提示", "分享成功！", "info");
+						} else if (json.a == "3") {
+							$.messager.alert("操作失败", "已分享过该知识图谱", "info");
+						} else if (json.a == "2") {
+							$.messager.alert("操作失败", "请登录后再操作", "info");
+						} else if (json.a == "5") {
+							$.messager.alert("操作失败", "不是您的知识图谱", "info");
+						} else {
+							$.messager.alert("操作提示", "请选择知识图谱！", "info");
+						}
+					},
 				});
-				
-			}		
+
+			}
 
             <!-- 列表操作专用 -->
-<!------------------------------------------------------------------------------------------------------------------------------------------------------>			
 			<!-- 分享思维导图按钮(列表中操作) -->
 			function sharemindmapButton(rootid){
 		    	
@@ -228,7 +226,7 @@
 				
 				        $.ajax({
 					        type : "POST",
-							url : "shareMap.do",
+							url : "/mindMap/shareMap",
 							data : da,
 							success : function(data) {
 								var json = $.parseJSON(data);
@@ -257,7 +255,7 @@
 		        
 				$.ajax({
 					type : "POST",
-					url : "delMapNode.do",
+					url : "/mindMap/delMapNode",
 					contentType:"application/json",
 					dataType:"json",
 					data : data,
@@ -282,7 +280,7 @@
 			 		  dataType:"json",
 			 		  contentType:"application/json",
 			 		  data:data,
-			 		  url:"deleteShareMindMap.do",
+			 		  url:"/mindMap/deleteShareMindMap",
 			 		  
 			 		  success:function(data){
 			 			  if(data.a=="2"){
@@ -306,7 +304,7 @@
 			   }    
 
 			<!-- 列表操作专用,以上  -->
-<!--------------------------------------------------------------------------------------------------------------->			
+
 
         /* 打开思维导图的子节点 */
 		function open_zijiedian() {
@@ -317,7 +315,7 @@
 					};
 			    $.ajax({
 					type : "POST",
-					url : "getMapChild.do",
+					url : "/mindMap/getMapChild",
 					data : da,
 					success : function(data) {
 						var json = $.parseJSON(data);
@@ -343,7 +341,7 @@
 			var da={"rootid":getRootId()};
 			    $.ajax({
 					type : "POST",
-					url : "getCompleteMap.do",   //根据某个id获取整个mindNode树
+					url : "/mindMap/getCompleteMap",   //根据某个id获取整个mindNode树
 					data : da,
 					success : function(data) {
 						var json = $.parseJSON(data);
@@ -364,13 +362,13 @@
  
   
   
-        /* 用来打开思维导图中的文件 */
+        /**用来打开思维导图中的文件 */
 		function fileChange() {
 			open_file();
 		}
+
         
-        
-        /* 新建思维导图 ???出来一个固定的新建思维导图*/
+         /**新建思维导图 出来一个固定的新建思维导图*/
 		function xinjian() {
         	clear();
         	
@@ -383,7 +381,7 @@
 					$.ajax({
 						type : "POST",
 						data : da,
-						url : "newNewMind.do",
+						url : "/mindMap/newNewMind",
 						
 						success : function(data) {
 							var json = $.parseJSON(data);
@@ -411,7 +409,7 @@
         
         /* 新建???一个一个试 */
 		function xinjian2() {
-			var mind_url = 'newMindMap.do';
+			var mind_url = '/mindMap/newMindMap';
 			jsMind.util.ajax.get(mind_url, function(mind) {
 				$('#mapid').attr("value", mind.mapid);
                 datas=eval('(' + mind.datas + ')');
@@ -586,7 +584,7 @@
 			       
 					$.ajax({
 						type : "POST",
-						url : "updateMapNode.do",
+						url : "/mindMap/updateMapNode",
 						data : da,
 						success : function(data) {
 							var json = $.parseJSON(data);
@@ -627,7 +625,7 @@
 			        
 					$.ajax({
 						type : "POST",
-						url : "delMapNode.do",
+						url : "/mindMap/delMapNode",
 						contentType:"application/json",
 						dataType:"json",
 						data : data,
@@ -688,7 +686,7 @@
             console.log(copyValue);
             $.ajax({
 				type: "post",
-				url: "paste_node.do", 
+				url: "/mindMap/paste_node",
 				data : JSON.stringify(data),
 				contentType:"application/json",
 				dataType:"json",
@@ -721,7 +719,7 @@
 			  }
 			$.ajax({
 				type : "POST",
-				url : "copyNode.do", 
+				url : "/mindMap/copyNode",
 				data : da,
 				async:false, 
 				success : function(json) {
@@ -795,7 +793,7 @@
                            
 					$.ajax({
 						type : "POST",
-						url : "saveMapNode.do",
+						url : "/mindMap/saveMapNode",
 						data : da,
 						
 						success : function(json) {
@@ -896,7 +894,7 @@
 					     };
 					$.ajax({
 						type : "POST",
-						url : "saveMindMap.do",
+						url : "/mindMap/saveMindMap",
 						data : da,
 						success : function(json) {
 							if (json.state == 0) {
@@ -931,7 +929,7 @@
 	    		 dataType:"json",
 	    		 contentType:"application/json",
 	    		 data:data,
-	    		 url:"getShareMap.do",
+	    		 url:"/mindMap/getShareMap",
 	    		 
 	    		 success:function(data){
 	    			 if(data.a=="1"){
@@ -992,7 +990,7 @@
 	 			contentType:"application/json",
 	 			dataType:"json",
 	 			data:data,
-	 			url:"getShareMapTotal.do",
+	 			url:"/mindMap/getShareMapTotal",
 	 			
 	 			success:function(data){
 	 				if(data==null){
@@ -1078,7 +1076,7 @@
  			 contentType:"application/json",
  			 dataType:"json",
  			 data:data,
- 			 url:"getShareMapTotal.do",
+ 			 url:"/mindMap/getShareMapTotal",
  			 
  			 success:function(data){
  				if(data<=currentPage){
@@ -1100,19 +1098,16 @@
 	function getMyMindMap(currentPage){
 		
 		var html="";
-		var adata={"parentid":"00100",
-				   "currentPage":currentPage,
-				   "pageSize":12
+		var data={
+				   "pageSize":"12",
+			       "pageNum":"1"
 		          };
-		
-		var data=JSON.stringify(adata);
-		
+
 		$.ajax({
 			type:"post",
 			contentType:"application/json",
-			dataType:"json",
-			data:data,
-			url:"getMyMap.do",
+			data:JSON.stringify(data),
+			url:"/mindMap/getMyMap",
 			
 			success:function(data){
 				
@@ -1172,7 +1167,7 @@
 			contentType:"application/json",
 			dataType:"json",
 			data:data,
-			url:"getMyMapPage.do",
+			url:"/mindMap/getMyMapPage",
 			
 			success:function(data){
 				if(data==null){
@@ -1259,7 +1254,7 @@
 		   contentType:"application/json",
 		   dataType:"json",
 		   data:data,
-		   url:"getMyMapPage.do",
+		   url:"/mindMap/getMyMapPage",
 			
 		   success:function(data){
 			   if(data<=currentPage){
@@ -1348,7 +1343,7 @@
 			
 			$.ajax({
 				type:"POST",
-				url:"setMapColor.do",
+				url:"/mindMap/setMapColor",
 				dataType:"json",
 				contentType:"application/json",
 				data:da,
@@ -1461,7 +1456,7 @@
 	    		 dataType:"json",
 	    		 contentType:"application/json",
 	    		 data:data,
-	    		 url:"getCache.do",
+	    		 url:"/mindMap/getCache",
 	    		 
 	    		 success:function(data){
 	    			 if(data.a=="1"){

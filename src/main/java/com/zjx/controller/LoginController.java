@@ -8,17 +8,18 @@ import com.zjx.service.impl.ReturnStatus;
 import com.zjx.service.impl.StatusMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+/*import org.springframework.security.authentication.AuthenticationManager;*/
+/*import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;*/
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -29,17 +30,17 @@ import java.util.Map;
 @Controller
 @RequestMapping("/login")
 public class LoginController {
-	
-	@Autowired
+
+	@Resource
 	private ReturnStatus returnStatus;
-	@Autowired
+	@Resource
 	private JsonAnalyze jsonAnalyze;
-	@Autowired
+	@Resource
 	private StatusMap statusMap;
-	@Autowired
+	@Resource
 	private LoginService loginService;
-	@Autowired
-	private AuthenticationManager authenticationManager;
+	/*@Resource
+	private AuthenticationManager authenticationManager;*/
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
@@ -82,9 +83,9 @@ public class LoginController {
 			session2.setMaxInactiveInterval(6*60*60);
 			
 			//验证成功后将会把返回的Authentication对象存放在SecurityContext
-			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+			/*UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 			Authentication authentication = authenticationManager.authenticate(authRequest); //调用loadUserByUsername
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);*/
 
 			//根据状态值返回
 			return returnStatus.student;//学生端
@@ -185,10 +186,10 @@ public class LoginController {
 		if (loginService.saveUser(userInfo) > 0) {
 		//	System.out.println("成功保存注册信息");
 		
-			//验证成功后将会把返回的Authentication对象存放在SecurityContext
+			/*//验证成功后将会把返回的Authentication对象存放在SecurityContext
 			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(account, password);
 			Authentication authentication = authenticationManager.authenticate(authRequest); //调用loadUserByUsername
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);*/
 			
 			session.setAttribute("username", account);
 			session.setMaxInactiveInterval(6*60*60);

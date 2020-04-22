@@ -15,11 +15,11 @@ import com.zjx.service.impl.StatusMap;
 import com.zjx.util.ResponseMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,19 +34,17 @@ import java.util.*;
 @RequestMapping("/mindMap")
 public class MindMapController {
 
-    @Autowired
-    private FileUpload fileUpload;
-    @Autowired
+    @Resource
     private StreamToBlob streamToBlob;
-    @Autowired
+    @Resource
     private JsonAnalyze jsonAnalyze;
-    @Autowired
+    @Resource
     private StatusMap statusMap;
-    @Autowired
+    @Resource
     private MindMapService mindMapService;
-    @Autowired
+    @Resource
     private FileService fileService;
-    @Autowired
+    @Resource
     private MindNodeService mindNodeService;
 
     private static final Logger logger = LoggerFactory.getLogger(MindMapController.class);
@@ -395,15 +392,17 @@ public class MindMapController {
 
     /**
      * 获取自己的知识图谱列表
-     * @param request
+     * @param
      * @return
      */
     @RequestMapping("getMyMap")
     @ResponseBody
-    public ResponseMsg getMyMap(@RequestBody HttpServletRequest request, String pageNum, String pageSize){
+    public ResponseMsg getMyMap(@RequestBody Map<String, String> map,HttpServletRequest request){
 
         HttpSession session = request.getSession();
         String userId = String.valueOf(session.getAttribute("userId"));
+        String pageNum = map.get("pageNum");
+        String pageSize = map.get("pageSize");
         Integer pageNumInt;
         Integer pageSizeInt;
 

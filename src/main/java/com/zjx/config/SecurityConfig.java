@@ -57,18 +57,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //其他地址的访问均需验证权限
                 .anyRequest().authenticated()
                 //指定登录页是"/login"
-                .and().formLogin().loginPage("/testLogin.do")
+                .and().formLogin().loginPage("/index/testLogin.do")
                 //登录成功后默认跳转到"/main.do?url=tab.do"
                 .defaultSuccessUrl("/index.do").permitAll()
                 //退出登录后的默认url是"/home"
                 .and().logout().logoutSuccessUrl("/index.do").permitAll();
 
     }
-
-    //@Bean
-    //public RestTemplate restTemplate(){
-    //    return new RestTemplate();
-    //}
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

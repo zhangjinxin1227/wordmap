@@ -10,7 +10,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="is_del" property="isDel" jdbcType="INTEGER" />
     <result column="color" property="color" jdbcType="INTEGER" />
-    <result column="zsd_ms" property="zsdms" jdbcType="LONGTEXT" />
+    <result column="zsd_ms" property="zsdms" jdbcType="LONGVARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
