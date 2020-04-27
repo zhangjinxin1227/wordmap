@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-<link href="css/bootstrap.css" rel="stylesheet">
-<link href="summernote/dist/summernote.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="css/biji/AliIcon.css">
-<link rel="stylesheet" type="text/css" href="css/biji/AliIcon2.css">
-<link rel="stylesheet" href="css/biji/biji.css" />
-<link rel="stylesheet" href="css/fileUpload/upload.css" />
+<link href="/css/bootstrap.css" rel="stylesheet">
+<link href="/summernote/dist/summernote.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/css/biji/AliIcon.css">
+<link rel="stylesheet" type="text/css" href="/css/biji/AliIcon2.css">
+<link rel="stylesheet" href="/css/biji/biji.css" />
+<link rel="stylesheet" href="/css/fileUpload/upload.css" />
 
-<script type="text/javascript" src="js/jquery.min2.1.4.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
-<script type="text/javascript" src="summernote/dist/summernote.js"></script>
-<script src="summernote/dist/lang/summernote-zh-CN.js"></script>    <!-- 中文-->
+<script type="text/javascript" src="/js/jquery.min2.1.4.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/summernote/dist/summernote.js"></script>
+<script src="/summernote/dist/lang/summernote-zh-CN.js"></script>    <!-- 中文-->
 
 
 <style>
@@ -47,20 +47,11 @@
 	     <li role="presentation" id="myFile">
 	       <a onclick="getUpload()">我的文件</a>
 	     </li>
-	     <li role="presentation" id="myCollect">
-	       <a onclick='showCollectionFile()'>文件收藏</a>
-	     </li>
-	     <li role="presentation" id="myShare">
-	       <a onclick='getShareUpload()'>文件分享</a>
-	     </li>
 	     <li role="presentation" id="UploadFile">
 	       <a onclick='uploadShow()'>上传文件</a>
 	     </li>
-	      <li role="presentation" id="ReceivePhoto">	<!-- ReceivePhoto -->
-	       <a onclick='refresh()'>刷新</a>	<!-- 函数 getReceivePhoto() 获取图片 -->
-	     </li>
 	     <li role="presentation" style="text-align:right;">
-	       <button onclick='cut();' type='button' class="btn btn-primary btn-block">保存</button>
+	       <button onclick='cut();' type='button' class="btn btn-primary btn-block" style="padding: 10px 15px">保存</button>
 	     </li>
 	 </ul>
 	 </div>
@@ -74,45 +65,17 @@
  
    <!-- 初始界面加载 -->
    <script type="text/javascript">
-	
-	
-	 var nodeid=parent.get_selected_nodeid();
-		var data={"nodeid":nodeid};
-		
-	console.log(" nodeid是："+nodeid);
-       $.ajax({
-			type:"get",
-			url:"set.do?nodeid="+nodeid,
-		}); 
-   
-   
 	   $(function(){
-		   
+
 		    getzsd();
-	
+
 	   });
-   
+
    </script>
  
  
       <!-- 获取并显示知识点内容 -->
 	  <script>
-	   //移除粘贴内容的样式，当粘贴图片时图片不显示
-	  /* $('.summernote').summernote({
-          callbacks: {
-              onPaste: function (ne) {
-                 var bufferText = ((ne.originalEvent || ne).clipboardData || window.clipboardData).getData('Text/plain');
-                  //    ne.preventDefault();  
-                  ne.preventDefault ? ne.preventDefault() : (ne.returnValue = false);
-                  // Firefox fix
-                  setTimeout(function () {
-                      document.execCommand("insertText", false, bufferText);
-                  }, 10);
-                 
-              }
-          }
-
-      }); */
 	
       $('#summernote').summernote({
     	  disableDragAndDrop: true
@@ -138,8 +101,8 @@
 			  var nodeid=parent.get_selected_nodeid();
 			  var nodeName=parent.get_selected_nodeName();
 			  var rootid = parent.getRootId();
-			  var adata={"nodeid":nodeid,
-					     "rootid":rootid 
+			  var adata={"nodeId":nodeid,
+					     "rootId":rootid
 					    };
 			  var data=JSON.stringify(adata);
 			  $("li").removeClass("active");
@@ -150,7 +113,7 @@
 			    	 contentType:"application/json",
 			    	 dataType:"json",
 			    	 data:data,
-			    	 url:"getMapZsd.do",
+			    	 url:"/mindMap/getMapZsd",
 			    	 
 			    	 success:function(data){
 			    		 
@@ -165,9 +128,7 @@
 				 			$('.summernote').summernote('code',html);
 				 			
 				 		 } else{
-				 			 
-				 		    console.log("有知识点");
-				 			html = data.map.zsdms;
+							 html = data.map.zsdms;
 				 			$('.summernote').summernote('code',html);
 				 		 }
 				 		 
@@ -183,47 +144,12 @@
 			  
 		   }
 	    
-	    
-	    //刷新节点
- 	     function refresh(){
-    	 
-    	  var nodeid = parent.get_selected_nodeid();	      	  
-    	  var rootid = parent.getRootId();
-		  var adata={"zsdid":nodeid,
-				     "rootid":rootid 
-				    };
-		  var data=JSON.stringify(adata);
-    	  
-    	  $.ajax({
-    		  
-    		  type: "post",
-    		  dataType: "json",
-    		  contentType: "application/json",
-    		  data: data,
-    		  url: "Wxqqq.do",	//后台接口
-    		  
-    		  success:function(data){
-    			  html = data.zsdms;
-		 			$('.summernote').summernote('code',html);
-    		  },
-    		  error:function(e){
-    			  //报错内容
-    			  alert("连接失败");
-    		  },
-    	  });
-      }
- 
-
-	    
 	      <!-- 保存节点上的知识点  -->
 		  function savezsd(){
 			  var nodeid=parent.get_selected_nodeid();
 			  var rootid = parent.getRootId();
-			  var qwe="666";
-			  var adata={"zsdid":nodeid,
-					  "zsddate":qwe,
-						 "zsdmc":$("#zsdmc").val(),
-						 "rootid":rootid,
+			  var adata={"nodeId":nodeid,
+						 "rootId":rootid,
 				         "zsdms":$('#a_content').summernote('code')
 				        };
 			 
@@ -234,7 +160,7 @@
 		    	  contentType:"application/json",
 		    	  dataType:"json",
 		    	  data:data,
-		    	  url:"saveMapZsd",
+		    	  url:"/mindMap/saveMapZsd",
 		    	  
 		    	  success:function(data){
 		    		  if(data.a=="1"){
@@ -295,43 +221,35 @@
 	    	cut(); 
 	    	var nodeid = parent.get_selected_nodeid();
 	    	var html = "";
-	    	var da={"nodeid":nodeid};
-	    	
+	    	var da={"nodeId":nodeid};
+	    	var data=JSON.stringify(da);
 	    	   $.ajax({
 	    		   type : "POST",
-				   url : "getMapUpload.do",
-				   data : da,
+				   url : "/mindMap/getMapUpload",
+				   dataType:"json",
+				   contentType:"application/json",
+				   data : data,
 				   
 				   success: function(data){
 					   $('#a_content').summernote('destroy');
 					   $("li").removeClass("active");
 					   $("#myFile").addClass("active");
-					   
-					   var json = $.parseJSON(data);
-					   
-					   if(json.state=='0'){
-						   
-						   $.each(json.list2,function(index,content){
-							   
-							   if(content.fileType=="other"){
-								   html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='pdf/generic/web/viewer.html?file="+content.filepath+"'>"+content.zlmc+"</a>"+
-							           "<span class='time'><i class='iconfont icon-shijian' ></i>"+content.time+"</span></div>"+ 
-								       "<div><p class='inc'><i class='iconfont icon-shuqianbookmark29'></i>"+content.zlms+"</p>"+
+					   var stust = data.data;
+					   if(data.code == 200){
+						   console.log("获得到数据啦："+ stust);
+						   $.each(stust,function(index,content){
+							   console.log("到这里啦");
+							   if(content.fileType== "other"){
+								   html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='/pdf/generic/web/viewer.html?file="+content.filePath+"'>"+content.fileName+"</a>"+
 								       "<span class='span'>"+
-									   "<a href='pdf/generic/web/viewer.html?file="+content.filepath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
-									   "<a  onclick='shareUpload("+nodeid+","+content.zlid+");'><i class='iconfont icon-fenxiang' id='sp'></i></a>"+
-									   "<a  onclick='collectUpload("+content.zlid+","+nodeid+")'><i class='iconfont icon-shoucang' id='sp' style='color: red;'></i></a>"+
-									   "<a  onclick='delUpload("+content.zlid+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
+									   "<a href='pdf/generic/web/viewer.html?file="+content.filePath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
+									   "<a  onclick='delUpload("+content.fileId+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
 								       "</span></div></div>";
 							   } else {
-								   html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='"+content.filepath+"'>"+content.zlmc+"</a>"+
-							           "<span class='time'><i class='iconfont icon-shijian' ></i>"+content.time+"</span></div>"+ 
-								       "<div><p class='inc'><i class='iconfont icon-shuqianbookmark29'></i>"+content.zlms+"</p>"+
+								   html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='"+content.filePath+"'>"+content.fileName+"</a>"+
 								       "<span class='span'>"+
-									   "<a href='"+content.filepath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
-									   "<a  onclick='shareUpload("+nodeid+","+content.zlid+");'><i class='iconfont icon-fenxiang' id='sp'></i></a>"+
-									   "<a  onclick='collectUpload("+content.zlid+","+nodeid+")'><i class='iconfont icon-shoucang' id='sp' style='color: red;'></i></a>"+
-									   "<a  onclick='delUpload("+content.zlid+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
+									   "<a href='"+content.filePath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
+									   "<a  onclick='delUpload("+content.fileId+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
 								       "</span></div></div>";
 							   }
 							   
@@ -352,13 +270,9 @@
 	  
 	     
 	    <!-- 删除节点上的文件  -->
-		function delUpload(zlid){
+		function delUpload(fileId){
 			
-			var nodeid=parent.get_selected_nodeid();
-			var rootid = parent.getRootId();
-			var adata={"zlid":zlid,
-					   "nodeid":nodeid,
-					   "rootid":rootid
+			var adata={"fileId":fileId
 			         };
 			var data=JSON.stringify(adata);
 			
@@ -366,16 +280,14 @@
 				  type:"POST",
 				  contentType:"application/json",
 				  dataType:"json",
-				  url:"delUpload.do",
+				  url:"/mindMap/delMapUpload",
 				  data:data,
 				  
 				  success:function(data){
 					  
-					  if(data.a==1){
+					  if(data.a==1) {
 						  alert("删除成功");
 						  window.location.reload();
-					  }else if(data.a==2){
-						  alert("非合法操作");
 					  }else{
 						  alert("删除失败");
 					  }
@@ -436,29 +348,26 @@
 			 var formData = new FormData();
 			 var nodeid=parent.get_selected_nodeid();
 			 var rootid = parent.getRootId();
-		  	 formData.append("wenjian",$("#wenjian")[0].files[0]);
-		  	 formData.append("nodeid",nodeid);
-		  	 formData.append("rootid",rootid);
+		  	 formData.append("file",$("#wenjian")[0].files[0]);
+		  	 formData.append("nodeId",nodeid);
+		  	 formData.append("rootId",rootid);
 		  	  
 		     $.ajax({
-		         url: 'setMapUpload.do',  
+		         url: '/mindMap/setMapUpload',
 		         type: 'post',
 		         data : formData, 
 		         processData : false, 
 		         contentType : false,
 		        
 		         success: function (data) {
-		        	 var json = $.parseJSON(data);
-		        	 if(json.a == "1"){
+		        	 if(data.a == "1"){
+		        	 	console.log("文件上传成功");
 		        		 alert("上传成功");
 		        		 uploadShow();
-		        	 } else if (json.a == "5"){
+		        	 } else if (data.a == "5"){
 		        		 alert("不是您的知识图谱");
 		        		 uploadShow();
-		        	 } else if (json.a == "3"){
-		        		 alert("已上传过该文件");
-		        		 uploadShow();
-		        	 } else if (json.a == "2"){
+		        	 } else if (data.a == "2"){
 		        		 alert("上传失败");
 		        		 uploadShow();
 		        	 }
@@ -471,305 +380,6 @@
 		  }
          
          
-      </script>
-      
-      
-      
-      <!-- 节点上传文件相关操作  -->
-      <script type="text/javascript">
-      
-        //分享上传文件
-		function shareUpload(nodeid,zlid){
-			
-			var rootid = parent.getRootId();
-			var adata={"nodeid":nodeid,
-					   "zlid":zlid,
-					   "rootid":rootid
-			          };
-			var data=JSON.stringify(adata);
-			
-			$.ajax({
-				type:"POST",
-				contentType:"application/json",
-				dataType:"json",
-				url:"saveNodeFile.do",
-				data:data,
-				
-				success:function(data){
-					
-					if(data.a=="1"){
-					   alert("分享成功");
-					   getShareUpload();
-					}else if(data.a=="2"){
-					   alert("非法操作，请登录");
-					   getShareUpload();
-					}else if(data.a=="3"){
-					   alert("已分享，请勿重新提交");
-					   getShareUpload();
-					}
-				},
-				
-				error:function(e){
-					alert("连接分享接口失败");
-				},						
-			});
-		}	
-      
- 
-        //获取显示节点上的分享文件
-		function getShareUpload(){
-			
-			  cut();
-			  var html="";	
-			  var nodeid=parent.get_selected_nodeid();
-			  var adata={"nodeid":nodeid};
-			  var data=JSON.stringify(adata);	
-			  	
-			    $.ajax({
-			    	type:"POST",
-			    	contentType:"application/json",
-			    	dataType:"json",
-			    	data:data,
-			    	url:"getShareUpload.do",
-			    	
-			    	success:function(data){
-			    		$('#a_content').summernote('destroy');
-						$("li").removeClass("active");
-						$("#myShare").addClass("active");
-			    		
-			    		if(data.state=="0"){
-			    			
-				    		$.each(data.list2,function(index,content){
-							
-				    			if(content.fileType=="other"){
-				    				html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='pdf/generic/web/viewer.html?file="+content.filepath+"'>"+content.zlmc+"</a>"+
-							           "<span class='time'><i class='iconfont icon-shijian' ></i>"+content.time+"</span></div>"+ 
-								       "<div><p class='inc'><i class='iconfont icon-shuqianbookmark29'></i>"+content.zlms+"</p>"+
-								       "<span class='span'>"+
-									   "<a href='pdf/generic/web/viewer.html?file="+content.filepath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
-									   "<a  onclick='collectUpload("+content.zlid+","+nodeid+")'><i class='iconfont icon-shoucang' id='sp' style='color: red;'></i></a>"+
-									   "<a  onclick='delShareUpload("+content.zlid+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
-								       "</span></div></div>";	   
-				    			}else{
-				    				html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='"+content.filepath+"'>"+content.zlmc+"</a>"+
-							           "<span class='time'><i class='iconfont icon-shijian' ></i>"+content.time+"</span></div>"+ 
-								       "<div><p class='inc'><i class='iconfont icon-shuqianbookmark29'></i>"+content.zlms+"</p>"+
-								       "<span class='span'>"+
-									   "<a href='"+content.filepath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
-									   "<a  onclick='collectUpload("+content.zlid+","+nodeid+")'><i class='iconfont icon-shoucang' id='sp' style='color: red;'></i></a>"+
-									   "<a  onclick='delShareUpload("+content.zlid+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
-								       "</span></div></div>";	    
-				    			}
-				    		
-				    		      });
-								
-			    	      	 }else{
-			    	      		html += "</br></br></br></br></br></br><h1 align='center'>暂无分享文件</h1>";
-			    	      	 }
-			    		
-			    		$("#a_content").html(html);
-			    	},
-			    	
-			    	error:function(e){
-			    		   alert("连接失败");
-			    	}
-			    	
-			    });
-				
-			}  
-        
-        
-        //删除分享文件
-		function delShareUpload(f_id){
-			
-			var nodeid=parent.get_selected_nodeid();
-			var rootid = parent.getRootId();
-			var adata={"f_id":f_id,
-					   "nodeid":nodeid,
-					   "rootid":rootid
-					   };
-			var data=JSON.stringify(adata);
-			
-			    $.ajax({
-			    	type:"POST",
-			    	contentType:"application/json",
-			    	dataType:"json",
-			    	data:data,
-			    	url:"delShareUpload.do",
-			    	
-			    	success:function(data){
-			    		
-			    		if(data.a==1){
-			    			alert("删除成功");
-			    			getShareUpload();
-			    		}else{
-			    			alert("删除失败");
-			    			getShareUpload();
-			    		}
-			    	},
-			    	
-			    	error:function(e){
-			    		alert("连接失败");
-			    	}
-			    	
-			    	
-			    });
-			
-		}        
-      
-      </script>
-      
-      
-      
-      <!-- 节点上收藏文件相关操作  -->
-      <script type="text/javascript">
-      
-        //节点上收藏文件功能
-		function collectUpload(zlid,nodeid){
-			
-			var rootid = parent.getRootId();
-			var adata={"zlid":zlid,
-					   "nodeid":nodeid,
-					   "rootid":rootid
-			       };
-			var data=JSON.stringify(adata);
-			
-			$.ajax({
-				type:"POST",
-				contentType:"application/json",
-				dataType:"json",
-				data:data,
-				url:"saveCollectUpload.do",
-				
-				success:function(data){
-					
-					if(data.a=="1"){
-						alert("收藏成功");
-						showCollectionFile();
-					}else if(data.a=="3"){
-						alert("已收藏过该文件");
-						showCollectionFile();
-					}else{
-						alert("收藏失败");
-						showCollectionFile();
-					}
-					
-				},
-				
-				error:function(e){			
-					alert("连接失败");
-				}
-				
-			});
-	
-		}
-		
-		
-		
-		//显示收藏文件
-		function showCollectionFile(){
-			
-			cut();
-			var nodeid=parent.get_selected_nodeid();
-			
-			var html="";
-			var adata={"nodeid":nodeid};
-			var data=JSON.stringify(adata);
-			
-			   $.ajax({
-				   type:"POST",
-				   contentType:"application/json",
-				   dataType:"json",
-				   data:data,
-				   url:"getCollectUpload.do",
-				   
-				   success:function(data){
-					   $('#a_content').summernote('destroy');
-					   $("li").removeClass("active");
-					   $("#myCollect").addClass("active");
-
-					   if(data.state=="0"){
-						   
-						   $.each(data.list2,function(i,content){
-							   
-							   if(content.fileType=="other"){
-								   html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='pdf/generic/web/viewer.html?file="+content.filepath+"'>"+content.zlmc+"</a>"+
-						           "<span class='time'><i class='iconfont icon-shijian' ></i>"+content.time+"</span></div>"+ 
-							       "<div><p class='inc'><i class='iconfont icon-shuqianbookmark29'></i>"+content.zlms+"</p>"+
-							       "<span class='span'>"+
-								   "<a href='pdf/generic/web/viewer.html?file="+content.filepath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
-								   "<a  onclick='shareUpload("+nodeid+","+content.zlid+");'><i class='iconfont icon-fenxiang' id='sp'></i></a>"+
-								   "<a  onclick='delCollectionFile("+content.zlid+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
-							       "</span></div></div>";
-							   }else{
-								   html = html+"<div class='box'><div><img src='"+content.tubiao+"'><a class='name' href='"+content.filepath+"'>"+content.zlmc+"</a>"+
-						           "<span class='time'><i class='iconfont icon-shijian' ></i>"+content.time+"</span></div>"+ 
-							       "<div><p class='inc'><i class='iconfont icon-shuqianbookmark29'></i>"+content.zlms+"</p>"+
-							       "<span class='span'>"+
-								   "<a href='"+content.filepath+"'><i class='iconfont icon-chakan' id='sp' style='color: green;'></i></a>"+
-								   "<a  onclick='shareUpload("+nodeid+","+content.zlid+");'><i class='iconfont icon-fenxiang' id='sp'></i></a>"+
-								   "<a  onclick='delCollectionFile("+content.zlid+");'><i class='iconfont icon-shanchu' id='sp' style='color:black;'></i></a>"+
-							       "</span></div></div>";
-							   }
-						      
-						   });   
-					   }else{   
-						   html += "</br></br></br></br></br></br><h1 align='center'>暂无收藏文件</h1>";
-					   }
-					   
-					   $("#a_content").html(html);
-				   },
-				   
-				   error:function(e){   
-					   alert("收藏文件连接失败");
-				   },
-		   
-			   });	
-		}
-		
-		
-		//删除收藏文件
-		function delCollectionFile(zlid){
-			
-			var nodeid=parent.get_selected_nodeid();
-			var rootid = parent.getRootId();
-			var adata={"zlid":zlid,
-					   "nodeid":nodeid,
-					   "rootid":rootid
-			          };
-			var data=JSON.stringify(adata);
-			
-			   $.ajax({
-				   type:"POST",
-				   contentType:"application/json",
-				   dataType:"json",
-				   data:data,
-				   url:"delCollectUpload.do",
-				   
-				   success:function(data){
-					   
-					   if(data.a=="1"){
-						   alert("删除成功");
-						   showCollectionFile();
-					   }else{
-						   alert("删除失败");
-						   showCollectionFile();
-					   }	   
-				   },
-				   
-				   error:function(e){
-					   alert("连接失败");
-					   window.location.reload();
-				   },
-				   
-			   });
-		    }      
-      
-      
-		
-		
-      
-      
       </script>
       
   

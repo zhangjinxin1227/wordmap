@@ -302,9 +302,10 @@
                     
                   //保存移动节点的位置，下次打开时能够根据拖动的位置打开
                    try {
-                	  var adata={"beforeId":src_node.id,
-                  		         "afterId":target_node.id,
-                  		         "rootid":jm.get_root().id
+                	  var adata={"beforeId":src_node.id,    //拖拽之前的父节点
+                  		         "afterId":target_node.id, //拖拽之后的父节点
+                  		         "rootId":jm.get_root().id,
+                                 "nodeId":parent.get_selected_nodeid()
                              };
                       var data=JSON.stringify(adata);
 					} catch (e) {
@@ -316,7 +317,7 @@
 		           		   contentType:"application/json",
 		           		   dataType:"json",
 		           		   data:data,
-		           		   url:"saveMapPosition.do",
+		           		   url:"/mindMap/saveMapPosition",
                     	   
 		           		   success:function(data){
 		           			  console.log("拖动保存成功");

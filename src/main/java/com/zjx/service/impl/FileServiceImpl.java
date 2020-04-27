@@ -27,8 +27,8 @@ public class FileServiceImpl implements FileService {
 
     //删除fileId对应的文件
     @Override
-    public Integer deleteFileId(Integer fileId){
-        return fileMapper.deleteFileId(fileId);
+    public Integer deleteFileId(Integer fileId,Integer userId){
+        return fileMapper.deleteFileId(fileId, userId);
     }
 
     /**
@@ -37,7 +37,7 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public void insertNodeFile(UploadFile uploadFile){
-        Integer fileId = fileMapper.insertNodeFile(uploadFile);
+        fileMapper.insertNodeFile(uploadFile);
         //fileMapper.insertNodeFileContact(fileId, uploadFile.getNodeId());
     }
 
@@ -46,6 +46,8 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public List<UploadFile> getUploadeFile(String nodeId){
-        return fileMapper.getUploadeFile(nodeId);
+        List<UploadFile> list = fileMapper.getUploadeFile(nodeId);
+        logger.info("数据库查到的文件列表是："+list);
+        return list;
     }
 }

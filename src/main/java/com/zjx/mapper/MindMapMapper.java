@@ -14,7 +14,10 @@ public interface MindMapMapper {
 
     MindMap getMindMap(@Param("rootId") String rootId);
 
-    Integer updateMindMap(@Param("mindMap") MindMap mindMap);
+    //修改图谱名称
+    void updateMapName(@Param("mapId")String rootId, @Param("mapName")String mapName);
+
+    Integer updateMindMap(MindMap mindMap);
 
     Integer deleteMap(@Param("rootId") String rootId);
 

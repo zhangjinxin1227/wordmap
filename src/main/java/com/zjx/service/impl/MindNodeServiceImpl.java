@@ -18,10 +18,7 @@ public class MindNodeServiceImpl implements MindNodeService {
     @Override
     public Integer deleteNode(String nodeId){
         Integer i = mindNodeMapper.deleteNode(nodeId);
-        if(i > 0){
-            mindNodeMapper.deleteNodeFile(nodeId);
-        }
-        return mindNodeMapper.deleteNode(nodeId);
+        return i;
     }
 
     /**
@@ -48,7 +45,26 @@ public class MindNodeServiceImpl implements MindNodeService {
     }
 
     /**
-     * 保存知识点描述
+     * 新建知识点
+     * @param mindNode
+     */
+    @Override
+    public void insertNode(MindNode mindNode){
+        mindNodeMapper.insertNode(mindNode);
+    }
+
+    /**
+     * 修改节点名称
+     * @param nodeId
+     * @param nodeName
+     */
+    @Override
+    public void updateNodeName(String nodeId, String nodeName){
+        mindNodeMapper.updateNodeName( nodeId,  nodeName);
+    }
+
+    /**
+     * 修改知识点知识点
      * @param mindNode
      * @return
      */
@@ -65,5 +81,24 @@ public class MindNodeServiceImpl implements MindNodeService {
     @Override
     public MindNode getNodems(String nodeId){
         return mindNodeMapper.getNodems(nodeId);
+    }
+
+    /**
+     * 修改节点颜色
+     * @param nodeId
+     * @param color
+     */
+    @Override
+    public void setMapColor(String nodeId, String color){
+        mindNodeMapper.setMapColor(nodeId, color);
+    }
+
+    /**
+     * 拖拽节点：根据修改父节点
+     * @param nodeId
+     * @param afterId
+     */
+    public void updateNodeParentId(String nodeId, String afterId){
+        mindNodeMapper.updateNodeParentId(nodeId, afterId);
     }
 }

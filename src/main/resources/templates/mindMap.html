@@ -165,24 +165,21 @@
 			clear();
 		    document.getElementById('nodeid').value=kcmc;
 			$('#mapid').attr("value",1);
-			var da={"nodeid":kcmc};
+			var da={"nodeId":kcmc};
 			    $.ajax({
 					type : "POST",
 					url : "/mindMap/openMyMap", //获取属于自己的某个思维导图
 					data : da,
 					success : function(data) {
-						var json = $.parseJSON(data);
-						document.getElementById('rootid').value = json.kcmc;  //记录根节点
+						document.getElementById('rootid').value = data.kcmc;  //记录根节点
 						
-						if (json.state == 1) {
-							datas=eval('(' + json.datas + ')'); 
+						if (data.state == 1) {
+							datas=eval('(' + data.datas + ')');
 					        jm.show(datas);
 					        traverse(datas.data); //覆盖加载节点颜色
 					        expand_to_level2();  //调整为显示主节点后的三层
 					       
-						}else if(json.a==2){
-							$.messager.alert("操作提示", "请登录后再查看分享的知识图谱", "info");
-						}else{
+						} else{
 							$.messager.alert("操作提示", "暂时没有可查看的知识图谱", "info");
 						}
 					},
@@ -310,27 +307,29 @@
 		function open_zijiedian() {
 		    
 			var selected_id = get_selected_nodeid();
-			var da={"nodeid":selected_id,
-					"rootid":getRootId()
+			var da={"nodeId":selected_id,
+					"rootId":getRootId()
 					};
-			    $.ajax({
-					type : "POST",
-					url : "/mindMap/getMapChild",
-					data : da,
-					success : function(data) {
-						var json = $.parseJSON(data);
-						if (json.a=="2"){
-							$.messager.alert("操作提示", "您没有登陆！", "info");
-						}
-						else if (json.state == 1) {
-							datas=eval('(' + json.datas + ')'); 
-					        jm.show(datas);
-					        traverse(datas.data);
-						}else {
-							$.messager.alert("操作提示", "找不到对应的知识图谱！", "info");
-						}
-					},
-				});
+			var data=JSON.stringify(da);
+			$.ajax({
+				type : "POST",
+				contentType:"application/json",
+				dataType:"json",
+				url : "/mindMap/getMapChild",
+				data : data,
+				success : function(data) {
+					if (data.a=="2"){
+						$.messager.alert("操作提示", "您没有登陆！", "info");
+					}
+					else if (data.state == 1) {
+						datas=eval('(' + data.datas + ')');
+						jm.show(datas);
+						traverse(datas.data);
+					}else {
+						$.messager.alert("操作提示", "找不到对应的知识图谱！", "info");
+					}
+				},
+			});
 			}
 	
 	
@@ -338,19 +337,18 @@
         /* 根据某个id获取整个mindNode树(根据部分显示整个思维导图) */
 		function open_mindnode2() {
 		
-			var da={"rootid":getRootId()};
+			var da={"rootId":getRootId()};
 			    $.ajax({
 					type : "POST",
 					url : "/mindMap/getCompleteMap",   //根据某个id获取整个mindNode树
 					data : da,
 					success : function(data) {
-						var json = $.parseJSON(data);
-						if (json.a=="2"){
+						if (data.a=="2"){
 							$.messager.alert("操作提示", "您没有登陆！", "info");
 						}
 						else 
-						if (json.state == 1) {
-							datas=eval('(' + json.datas + ')'); 
+						if (data.state == 1) {
+							datas=eval('(' + data.datas + ')');
 					        jm.show(datas);
 					        traverse(datas.data);
 						}else {
@@ -384,16 +382,14 @@
 						url : "/mindMap/newNewMind",
 						
 						success : function(data) {
-							var json = $.parseJSON(data);
-						
-							if(json.a=="2"){
-								$.messager.alert("操作提示", "您还没有登陆！", "info");
-							}
-							else if(json.state == "1") {
-								datas=eval('(' + json.datas + ')');
+
+							if(data.state == "1") {
+								datas = eval('(' + data.datas + ')');
 								document.getElementById('nodeid').value = datas.data.id;
-								document.getElementById('rootid').value = json.kcmc;
+								document.getElementById('rootid').value = data.kcmc;
 								jm.show(datas);
+							}else if(data.a == "2"){
+								$.messager.alert("操作提示", "您还没有登陆！", "info");
 							}else {
 								$.messager.alert("操作提示", "找不到对应的知识图谱！", "info");
 							}
@@ -577,9 +573,9 @@
 					jm.enable_edit();
 		         
 					var da = {
-						"nodeid" : selected_id,
-						"nodename" : r	,
-						"rootid" : rootid
+						"nodeId" : selected_id,
+						"nodeName" : r	,
+						"rootId" : rootid
 				             };
 			       
 					$.ajax({
@@ -587,11 +583,11 @@
 						url : "/mindMap/updateMapNode",
 						data : da,
 						success : function(data) {
-							var json = $.parseJSON(data);
-							if(json.a=="2"){
+
+							if(data.a=="2"){
 								$.messager.alert("操作提示", "您没有登陆！", "error");
 							}else
-							if (json.a == "1") {
+							if (data.a == "1") {
 								jm.update_node(selected_id, r);
 							} else {
 								$.messager.alert("操作提示", "操作失败！", "error");
@@ -617,12 +613,10 @@
 		            var rootid = getRootId();
 		           
 		            jm.remove_node(selected_node);
-			        var adata= {"nodeid":selected_id,
-			        		    "rootid":rootid
+			        var adata= {"nodeId":selected_id,
+			        		    "rootId":rootid
 					         };
 			        var data=JSON.stringify(adata);
-			        
-			        
 					$.ajax({
 						type : "POST",
 						url : "/mindMap/delMapNode",
@@ -754,29 +748,11 @@
 			$.messager.prompt('新增子级标签', '请输入标签名', function(options) {
 				var r = loap(options); //获取输入框内容
 				if (r) {
-					
-					
-					//设置时间格式
-					Date.prototype.Format = function (fmt) { // author: meizz
-                    var o = {
-                    "M+": this.getMonth() + 1, // 月份
-                    "d+": this.getDate(), // 日
-                    "h+": this.getHours(), // 小时
-                    "m+": this.getMinutes(), // 分
-                    "s+": this.getSeconds(), // 秒
-                    "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
-                    "S": this.getMilliseconds() // 毫秒
-                          };
-
-                    if (/(y+)/.test(fmt))
-                    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-                    for (var k in o)
-                    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-                     return fmt;
-					}
-					
-					var nodeid=new Date().Format("yyyyMMddhhmmss");
-					var rootid = getRootId();
+					//生成随机数，避免新建时，产生相同的id，会影响建立子节点，这里随机生成的数，只有这个作用，
+					//也不会传到后台，不影响节点后续的展示！！！
+					var nodeid = Math.floor(Math.random() * 10000 + 1);
+					var rootId = getRootId();
+					console.log("rootId是："+rootId);
 					var topic = r;
 					jm.enable_edit();
 					//扩展方法， right 将子节点增加到右侧， left 将子节点增加到左侧，默认右侧
@@ -785,10 +761,9 @@
 
 					var selected_id = get_selected_nodeid();
                         var da = {
-						"nodeid" : nodeid,          //新时间
-						"nodename" : topic,
-						"parentid":selected_id,      //原来节点的nodeid，这样才可以串起来
-						"rootid" : rootid  //根节点
+						"nodeName" : topic,
+						"parentId":selected_id,      //原来节点的nodeid，这样才可以串起来
+						"rootId" : rootId  //根节点
 					};
                            
 					$.ajax({
@@ -910,192 +885,12 @@
 
 		}
 	</script>
-	    
-	    
-	<!-- 获取分享过的知识图谱 -->    
-	<script type="text/javascript">
-	
-	     function getShareMindMap(currentPage){
-	    	 
-	    	 var html="";
-	    	 var adata={"sharetype":"mindnode",
-	    			    "currentPage":currentPage,
-	    			    "pageSize":12
-	    	           };
-	    	 var data=JSON.stringify(adata);
-	    	 
-	    	 $.ajax({
-	    		 type:"POST",
-	    		 dataType:"json",
-	    		 contentType:"application/json",
-	    		 data:data,
-	    		 url:"/mindMap/getShareMap",
-	    		 
-	    		 success:function(data){
-	    			 if(data.a=="1"){
-	    				 $.messager.alert("操作提示",
-									"目前没有分享的知识图谱！",
-									"info");
-	    			 }else if(data.a=="2"){
-	    				 $.messager.alert("操作提示",
-									"请登录后再进行以下操作",
-									"info");
-	    			 }else{
-	    				 html+="<table class='table table-hover'>";
-						 html+="<thead><tr><th>图谱名称</th><th>分享用户</th><th>分享时间</th><th>知识图谱</th><th>操作</th></tr></thead>";
-						 html+="<tbody>";
-						 
-						 $.each(data,
-								function(i,a){
-									 html+="<tr><td>"+a.nodename+"</td>";
-									 html+="<td>"+a.userid+"</td>";
-									 html+="<td>"+a.sharetime+"</td>";
-									 html+="<td><span class='link-style' onclick='open_ajax("+a.nodeid+",\""+a.userid+"\");'>"+"查看"+"</span></td>";
-									 html+="<td><span class='link-style' onclick='delteShareMindMap("+a.nodeid+",\""+a.userid+"\",\""+currentPage+"\");'>"+"删除"+"</span></td>";
-									 html+="</tr>";
-							 
-						 });
-						 
-						 html+="</tbody></table>";
-						 $("#jsmind_container").html(html); 
-						 getShareMindMapPage(currentPage);
-	    			 }
-	    		 
-	    		 },
-	    		 
-	    		 error: function(e){
-	    			 alert("网络连接失败");
-	    		 },
-	    	 });
-	    	 
-	     }
-	     
-	     
-	    <!-- 动态获取分享过的思维导图的页数 -->
-	 	function getShareMindMapPage(currentPage){
-	 		
-	 		var html="";
-	 		var lastPage;
-	 		var nextPage;
-	 		var showPage=4;      //每次显示的页数
-	 		var index;
-	 		var x;               //定义后面页数固定
-	 		var adata={"sharetype":"mindnode",
-	 				   "pageSize":12
-	 		           };
-	 		var data=JSON.stringify(adata);
-	 		
-	 		$.ajax({
-	 			type:"post",
-	 			contentType:"application/json",
-	 			dataType:"json",
-	 			data:data,
-	 			url:"/mindMap/getShareMapTotal",
-	 			
-	 			success:function(data){
-	 				if(data==null){
-	 					alert("获取失败");
-	 				}else{
-	 					html+="<div align='center'>";
-	 					html+="<ul class='pagination'>";
-	 					html+="<li><span onclick='getShareMindMap(1)'>首页</span></li>";
-	 					
-	 					lastPage=currentPage;
-	 					if(lastPage<=1){
-	 						lastPage==1;
-	 					}else{
-	 						lastPage--;
-	 					}
-	 					
-	 					html+="<li><span onclick='getShareMindMap("+lastPage+")'>上一页</span></li>";
-	 					
-	 					if(data<=showPage){
-	 						for(var i=1;i<=data;i++){
-	 							if(currentPage==i){
-	 								html+="<li class='active'><span onclick='getShareMindMap("+i+")'>"+i+"</span></li>";
-	 							} else{
-	 								html+="<li><span onclick='getShareMindMap("+i+")'>"+i+"</span></li>";
-	 							}
-	 						}
-	 					}else{
-	 						index=currentPage+showPage;
-	 						x=currentPage;
-	 						if(index>data){
-	 							index=data+1;
-	 							x=index-showPage;
-	 						}
-	 						
-	 						for(var i=x;i<index;i++){
-	 							if(currentPage==i){
-	 								html+="<li class='active'><span onclick='getShareMindMap("+i+")'>"+i+"</span></li>";
-	 							} else{
-	 								html+="<li><span onclick='getShareMindMap("+i+")'>"+i+"</span></li>";
-	 							}
-	 						}
-	 					} 
-	 					
-	 					
-	 					nextPage=currentPage;
-	 					if(nextPage<data){
-	 						nextPage++;
-	 					}else if(nextPage==data){
-	 						nextPage=data;
-	 					}
-	 					
-	 					html+="<li><span onclick='getShareMindMap("+nextPage+")'>下一页</span></li>";
-	 					html+="<li><span onclick='getShareMindMap("+data+")'>尾页</span></li>";
-	 					html+="</ul>";
-	 					html+="</div>";
-	 					$("#jsmind_container").append(html); 
-	 					
-	 				}
-	 				
-	 			},
-	 			
-	 			error:function(e){
-	 				alert("网络连接失败!");
-	 			},
-	 			
-	 		});
-	 	}
-	     
-	</script>    
-	
-	
-    <!-- 用来刷新删除后的分享页面的页数 -->
-    <script type="text/javascript">
-    
-     function  freshenShareMindMap(currentPage){
-    	 var adata={"sharetype":"mindnode",
-    			    "pageSize":12
-    			 };
-	 	 var data=JSON.stringify(adata);
-	 	 
-	 	 $.ajax({
-	 		 type:"post",
- 			 contentType:"application/json",
- 			 dataType:"json",
- 			 data:data,
- 			 url:"/mindMap/getShareMapTotal",
- 			 
- 			 success:function(data){
- 				if(data<=currentPage){
- 				   getShareMindMap(data);
- 			   }else{
- 				   var j = parseInt(currentPage);
- 				   getShareMindMap(j);
- 			   }
- 			 },
-	 	 });
-	 	 
-     }
-    </script>
 
 			
 	<!-- 获取自己的思维导图 -->		
 	<script type="text/javascript">
 	
-	function getMyMindMap(currentPage){
+	function getMyMindMap(){
 		
 		var html="";
 		var data={
@@ -1111,31 +906,28 @@
 			
 			success:function(data){
 				
-				if(data.a=="2"){
+				if(data.code != 200){
 					alert("您还尚未创建自己的知识图谱！");
-				}else if(data.a=="1"){
-					alert("您还尚未登录");
 				}else{
+					var mapList = data.data.list;
+					console.log(mapList);
 					html+="<table class='table table-hover'>";
-					html+="<thead><tr><th>图谱名称</th><th>用户</th><th>创建时间</th><th>知识图谱</th><th>分享</th><th>删除</th></tr></thead>";
-					html+="<tbody>"; 
-					
-					$.each(
-						data,
-						function(i,a){
-						    html+="<tr><td>"+a.nodename+"</td>";
-						    html+="<td>"+a.userid+"</td>";
-						    html+="<td>"+a.nodeid+"</td>";
-						    html+="<td><span class='link-style' onclick='open_ajax2("+a.nodeid+");'>"+"查看"+"</span></td>";
-						    html+="<td><span class='link-style' onclick='sharemindmapButton("+a.nodeid+")'>"+"分享"+"</span></td>";
-						    html+="<td><span class='link-style' onclick='deleteNodeByBatchButton("+a.nodeid+","+currentPage+")'>"+"删除"+"</span></td>";
+					html+="<thead><tr><th>图谱名称</th><th>用户</th><th>知识图谱</th><th>查看评论</th><th>分享</th><th>删除</th></tr></thead>";
+					html+="<tbody>";
+					for(var i = 0; i < mapList.length; i++){
+							console.log(mapList[i].rootName);
+						    html+="<tr><td>"+mapList[i].rootName+"</td>";
+						    html+="<td>"+mapList[i].userName+"</td>";
+						    html+="<td><span class='link-style' onclick='open_ajax2("+mapList[i].mapId+");'>"+"查看导图"+"</span></td>";
+							html+="<td><span class='link-style' onclick='open_ajax2("+mapList[i].mapId+");'>"+"查看评论"+"</span></td>";
+						    html+="<td><span class='link-style' onclick='sharemindmapButton("+mapList[i].mapId+")'>"+"分享"+"</span></td>";
+						    html+="<td><span class='link-style' onclick='deleteNodeByBatchButton("+mapList[i].mapId+")'>"+"删除"+"</span></td>";
 						    html+="</tr>"; 
-					});
+					}
 					
 					html+="</tbody></table>";
-					
-					$("#jsmind_container").html(html); 
-					getMyMindMapPage(currentPage);
+					$("#jsmind_container").html(html);
+
 				}
 				
 			},
@@ -1146,95 +938,6 @@
 			
 		});
 		
-	}
-	
-	<!-- 动态获取我的思维导图的页数 -->
-	function getMyMindMapPage(currentPage){
-		
-		var html="";
-		var lastPage;
-		var nextPage;
-		var showPage=4;      //每次显示的页数
-		var index;
-		var x;               //定义后面页数固定
-		var adata={"parentid":"00100",
-			       "pageSize":12	
-		    };
-		var data=JSON.stringify(adata);
-		
-		$.ajax({
-			type:"post",
-			contentType:"application/json",
-			dataType:"json",
-			data:data,
-			url:"/mindMap/getMyMapPage",
-			
-			success:function(data){
-				if(data==null){
-					alert("获取失败");
-				}else{
-					
-					html+="<div align='center'>";
-					html+="<ul class='pagination'>";
-					html+="<li><span onclick='getMyMindMap(1)'>首页</span></li>";
-					
-					lastPage=currentPage;
-					if(lastPage<=1){
-						lastPage==1;
-					}else{
-						lastPage--;
-					}
-					
-					html+="<li><span onclick='getMyMindMap("+lastPage+")'>上一页</span></li>";
-					
-					if(data<=showPage){
-						for(var i=1;i<=data;i++){
-							if(currentPage == i){
-								html+="<li class='active'><span onclick='getMyMindMap("+i+")'>"+i+"</span></li>";
-							} else {
-								html+="<li><span onclick='getMyMindMap("+i+")'>"+i+"</span></li>";
-							}
-						}
-					}else{
-						index=currentPage+showPage;
-						x=currentPage;
-						if(index>data){
-							index=data+1;
-							x=index-showPage;
-						}
-						
-						for(var i=x;i<index;i++){
-							if(currentPage == i){
-								html+="<li class='active'><span onclick='getMyMindMap("+i+")'>"+i+"</span></li>";
-							} else {
-								html+="<li><span onclick='getMyMindMap("+i+")'>"+i+"</span></li>";
-							}
-						}
-					} 
-					
-					
-					nextPage=currentPage;
-					if(nextPage<data){
-						nextPage++;
-					}else if(nextPage==data){
-						nextPage=data;
-					}
-					
-					html+="<li><span onclick='getMyMindMap("+nextPage+")'>下一页</span></li>";
-					html+="<li><span onclick='getMyMindMap("+data+")'>尾页</span></li>";
-					html+="</ul>";
-					html+="</div>";
-					$("#jsmind_container").append(html); 
-					
-				}
-				
-			},
-			
-			error:function(e){
-				alert("网络连接失败!");
-			},
-			
-		});
 	}
 	
 	</script>	 	
@@ -1311,18 +1014,17 @@
 	  
 	  //关闭模态框，将节点传入redis并设置为空
 	  $(document).on('click', '.zeromodal-close', function(e){
-          
-		  var nodeid="null";
-			var data={"nodeid":nodeid};
+	  	//注释部分是微信上传图片功能的
+	  	/*var nodeid="null";
+	  	var data={"nodeid":nodeid};
 			
 		console.log(" nodeid是："+nodeid);
 	       $.ajax({
 				type:"get",
 				url:"set.do?nodeid="+nodeid,
-			}); 
-			
-			
-		});
+			}); */
+
+	  });
 	  
     </script>
     
@@ -1335,9 +1037,9 @@
 			var sel=$("jmnode.selected").attr("nodeid");
 			var color1=shiftcolor(color);
 			var data={
-					"nodeid":sel,
+					"nodeId":sel,
 					"color":color1,
-					"rootid":getRootId()
+					"rootId":getRootId()
 			}
 			var da=JSON.stringify(data);
 			
@@ -1779,15 +1481,7 @@
 		<input type="file" id="file_input" onchange="open_file();" style="display:none;"  accept=".jm">
 		<li onclick="save_file();" title="生成文件"><i class="icon-folder-close hovli bigger-120"></i></li>
 		<li onclick="screen_shot();" title="生成图片"><i class="icon-camera hovli bigger-120"></i></li>
-	    <!-- <li onclick="chat();" title="讨论"><i class="icon-group hovli bigger-120"></i></li> -->
-	  
-		<li onclick="getShareMindMap(1)" title="查看分享图谱"><i class="icon-group hovli bigger-120"></i></li>
-		<li onclick="getMyMindMap(1);" title="我的知识图谱"><span class="glyphicon glyphicon-user hovli"></span></li>
-		<li onclick="sharemindmap();" title="分享"><i class="icon-share hovli bigger-120"></i></li>
-	
-	     <li onclick="cache()" title="最近更新"> <i class="icon-time hovli bigger-120"></i></li>
-	    
-	     
+		<li onclick="getMyMindMap(1);" title="我的知识图谱"><i class="icon-list hovli bigger-120"></i></li>
 		</ul>
 	</div>	
 
@@ -1809,10 +1503,6 @@
 		<div data-options="iconCls:'icon-circle-arrow-right'" onClick="add_node2()" style="height:30px;padding:10px 0;">新建子标签</div>
 		<div class="menu-sep"></div>
 		<div data-options="iconCls:'icon-edit'" onClick="modify_node()" style="height:30px;padding:10px 0;" >修改标签名</div>
-		<div class="menu-sep"></div>
-		<div data-options="iconCls:'icon-copy'" onClick="copy_node()" style="height:30px;padding:10px 0;" >复制该标签</div>
-		<div class="menu-sep"></div>
-		<div data-options="iconCls:'icon-paste'" onClick="paste_node()" style="height:30px;padding:10px 0;" >粘贴子标签</div>
 		<div class="menu-sep"></div>
 		<div data-options="iconCls:'icon-remove'" onclick="deleteNodeByBatch()" style="height:30px;padding:10px 0;">删除该标签</div>
 		<div class="menu-sep"></div>

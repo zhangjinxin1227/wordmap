@@ -15,7 +15,7 @@
 
   </resultMap>
   <sql id="Base_Column_List" >
-    id, block_number, node_number, grant_token_number, consum_token_number
+    id, account, name, password, email, phone, is_del, city, address, created_time
   </sql>
 
   <select id="getUserInfo" resultType="com.zjx.model.UserBean">

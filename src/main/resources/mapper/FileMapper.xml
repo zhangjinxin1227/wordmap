@@ -8,6 +8,7 @@
     <result column="node_id" property="nodeId" jdbcType="VARCHAR" />
     <result column="file_path" property="filePath" jdbcType="VARCHAR" />
     <result column="file_type" property="fileType" jdbcType="VARCHAR" />
+    <result column="tubiao" property="tubiao" jdbcType="VARCHAR" />
     <result column="is_del" property="isDel" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -21,7 +22,7 @@
     update
     file
     set
-    id_del = 1,
+    is_del = 1,
     update_time = NOW()
     where node_id = #{nodeId}
   </update>
@@ -30,9 +31,11 @@
     update
     file
     set
-    id_del = 1,
+    is_del = 1,
     update_time = NOW()
     where file_id = #{fileId}
+    and
+    user_id = #{userId}
   </update>
 
   <insert id="insertNodeFile" parameterType="com.zjx.model.UploadFile"  useGeneratedKeys="true" keyProperty="file_id">
@@ -53,6 +56,9 @@
       <if test="nodeId != null" >
         node_id,
       </if>
+      <if test="tubiao != null" >
+        tubiao,
+      </if>
       is_del
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -71,6 +77,9 @@
       <if test="nodeId != null" >
         #{nodeId},
       </if>
+      <if test="tubiao != null" >
+        #{tubiao},
+      </if>
       0
     </trim>
   </insert>
@@ -86,7 +95,8 @@
     f.file_name as fileName,
     f.file_path as filePath,
     f.file_type as fileType,
-    f.node_id as nodeId
+    f.node_id as nodeId,
+    f.tubiao as tubiao
     FROM
     file f
     WHERE
@@ -101,7 +111,8 @@
     f.file_name as fileName,
     f.file_path as filePath,
     f.file_type as fileType,
-    f.node_id as nodeId
+    f.node_id as nodeId,
+    f.tubiao as tubiao
     FROM
     file f
     WHERE

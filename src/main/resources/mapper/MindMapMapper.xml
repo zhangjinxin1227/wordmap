@@ -60,11 +60,21 @@
     </trim>
   </insert>
 
+  <update id="updateMapName">
+    update mind_map
+    set
+    node_name = #{mapName},
+    update_time = NOW()
+    where
+    map_id = #{mapId}
+    and is_del = 0
+  </update>
+
   <select id="getMindMap" resultType="com.zjx.model.MindMap">
     SELECT
 	m.map_id as mapId,
 	m.user_id userId,
-	m.node_name as nodeName,
+	m.node_name as rootName,
 	m.`data` as data,
 	m.maplist as mapList
     FROM
@@ -100,14 +110,19 @@
   <select id="getMapList" resultType="com.zjx.model.MindMap">
     SELECT
     m.map_id as mapId,
-    m.node_name as nodeName,
+    m.node_name as rootName,
     m.user_id as userId,
+    u.name as userName,
     m.is_share as isShare
     FROM
-    mind_map m
+    mind_map m, um_t_user u
     WHERE
     m.user_id = #{userId}
     AND
+    u.id = m.user_id
+    and
+    u.is_del = 0
+    and
     m.is_del = 0
   </select>
   
@@ -136,15 +151,20 @@
   <select id="getShareMapList" resultType="com.zjx.model.MindMap">
     SELECT
     m.map_id as mapId,
-    m.node_name as nodeName,
+    m.node_name as rootName,
     m.user_id as userId,
+    u.name as userName,
     m.is_share as isShare,
     m.share_time as shareTime
     FROM
-    mind_map m
+    mind_map m, um_t_user u
     WHERE
     m.user_id = #{userId}
     AND
+    u.id = m.user_id
+    and
+    u.is_del = 0
+    and
     m.is_del = 0
     and
     m.is_share = 1

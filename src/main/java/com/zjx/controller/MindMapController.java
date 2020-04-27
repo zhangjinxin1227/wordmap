@@ -2,7 +2,6 @@ package com.zjx.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.zjx.json.FileUpload;
 import com.zjx.json.JsonAnalyze;
 import com.zjx.json.StreamToBlob;
 import com.zjx.model.MindMap;
@@ -15,6 +14,7 @@ import com.zjx.service.impl.StatusMap;
 import com.zjx.util.ResponseMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -91,7 +91,7 @@ public class MindMapController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("newNewMind")
+    @RequestMapping(value = "newNewMind" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String newNewMind(@RequestParam String nodeName, HttpServletRequest request) throws IOException{
 
@@ -156,9 +156,9 @@ public class MindMapController {
 
         if(mindMapService.saveMindMap(mindmap)){
             return data;
+        }else {
+            return statusMap.a("2");
         }
-        return statusMap.a("2");
-
     }
 
 
@@ -171,7 +171,7 @@ public class MindMapController {
      * @return
      * @throws IOException
      */
-    @RequestMapping("/saveMapNode")
+    @RequestMapping(value = "/saveMapNode" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String saveMapNode(MindNode mindNode, HttpServletRequest request) throws IOException{
 
@@ -206,16 +206,18 @@ public class MindMapController {
         newMindNode.setNodeId(nodeId);
         newMindNode.setNodeName(nodeName);
         newMindNode.setParentId(parentId);
+        newMindNode.setUserId(Integer.parseInt(userId));
 
-        list.add(mindNode);
+        list.add(newMindNode);
+        //可能有问题
         String open = mindMapService.openMind(list, rootId);
 
         mindMap.setMapList(jsonAnalyze.list2Json(list));    //更新树
         mindMap.setData(open);                              //更新数据
 
-        //获取当前时间，将当前时间放入date
-        mindMap.setData(nodeId);
         if(mindMapService.updateMindMap(mindMap)){
+            //将新建的节点存入数据库
+            mindNodeService.insertNode(newMindNode);
             return open;
         }
         return statusMap.a("2");
@@ -224,13 +226,13 @@ public class MindMapController {
 
 
     /**
-     * 修改知识图谱节点信息
+     * 修改知识图谱节点名称
      * @param mindNode
      * @param request
      * @return
      * @throws IOException
      */
-    @RequestMapping("updateMapNode")
+        @RequestMapping(value = "updateMapNode" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String updateMapNode(MindNode mindNode, HttpServletRequest request) throws IOException{
 
@@ -264,7 +266,7 @@ public class MindMapController {
 
             if( getMindNode.getNodeId().equals(nodeId) ){
                 getMindNode.setNodeName(nodeName);
-                list.set(i, mindNode);          //修改
+                //list.set(i, mindNode);          //修改
             }
 
         }
@@ -272,6 +274,7 @@ public class MindMapController {
         mindMap.setUpdateTime(df.format(new Date()));
         //更改MindMap名
         if(rootId.equals(nodeId)){
+            mindMapService.updateMapName(nodeId, nodeName);
             mindMap.setRootName(nodeName);
         }
 
@@ -282,6 +285,7 @@ public class MindMapController {
         mindMap.setData(open);                              //更新数据
 
         if(mindMapService.updateMindMap(mindMap)){
+            mindNodeService.updateNodeName(nodeId,nodeName);
             return statusMap.a("1");
         }
         return statusMap.a("3");
@@ -291,19 +295,18 @@ public class MindMapController {
 
 
     /**
-     * 删除数据库（学习是不可能学习的，只是删库跑路才能勉强维持的了生活）
-     * @param requestJsonBody
+     * 删除节点信息（学习是不可能学习的，只是删库跑路才能勉强维持的了生活）
+     * @param delMindNode
      * @param request
      * @return
      * @throws IOException
      */
-    @RequestMapping("delMapNode")
+    @RequestMapping(value = "delMapNode" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public String delMapNode(@RequestBody String requestJsonBody, HttpServletRequest request) throws IOException{
+    public String delMapNode(@RequestBody MindNode delMindNode, HttpServletRequest request) throws IOException{
 
-        Map<String, Object> map=jsonAnalyze.json2Map(requestJsonBody);
-        String nodeId = String.valueOf(map.get("nodeId")); //获取节点id
-        String rootId = String.valueOf(map.get("rootId"));//获取跟节点id
+        String nodeId = delMindNode.getNodeId(); //获取节点id
+        String rootId = delMindNode.getRootId();//获取跟节点id
 
         HttpSession session=request.getSession();
         String userId= String.valueOf(session.getAttribute("userId")); //获取本用户id
@@ -344,7 +347,7 @@ public class MindMapController {
                 Integer fileNumber = fileService.deleteNodeFiles(id);
                 logger.info(id + "节点上删除的资源数是：" + fileNumber);
             } catch (Exception e) {
-                // TODO: handle exception
+                e.printStackTrace();
             }
 
             //将节点删除，即将is_del设置成1
@@ -356,7 +359,7 @@ public class MindMapController {
                     logger.info(id + "节点未删除，没有找到");
                 }
             } catch (Exception e) {
-                // TODO: handle exception
+                e.printStackTrace();
             }
 
         }
@@ -395,7 +398,7 @@ public class MindMapController {
      * @param
      * @return
      */
-    @RequestMapping("getMyMap")
+    @RequestMapping(value = "getMyMap" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseMsg getMyMap(@RequestBody Map<String, String> map,HttpServletRequest request){
 
@@ -430,49 +433,16 @@ public class MindMapController {
 
 
     /**
-     * 获取我的知识图谱总页数
-     */
-    /*@RequestMapping("getMyMapPage.do")
-    @ResponseBody
-    public Long getMyMapPage(@RequestBody String requestJsonBody,
-                             HttpServletRequest request) throws IOException{
-
-        Map<String, Object> map = jsonAnalyze.json2Map(requestJsonBody);
-        String parentid=String.valueOf(map.get("parentid"));
-
-        HttpSession session = request.getSession();
-        String userid = String.valueOf(session.getAttribute("username"));
-
-        Long total=null;
-        Integer pageSize=(Integer) map.get("pageSize");
-        try {
-            total=this.tryCatchNewMindService.countByOneMind("userid", userid);
-            total=(total-1)/pageSize+1;
-        } catch (Exception e) {
-            // TODO: handle exception
-            return null;
-        }
-
-        if( total.equals("null")||total.equals(null) ){
-            return null;
-        }
-        return total;
-
-    }*/
-
-    /**
      *打开某个具体的知识图谱
-     * @param nodeid
+     * @param nodeId
      * @param request
      * @return
      */
-    @RequestMapping("openMyMap")
+    @RequestMapping(value = "openMyMap" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public String openMyMap(@RequestParam String nodeid, HttpServletRequest request){
+    public String openMyMap(@RequestParam String nodeId, HttpServletRequest request){
 
-        //HttpSession session = request.getSession();
-        //String userId = String.valueOf(session.getAttribute("userId"));
-        MindMap mindMap = mindMapService.getMindMap(nodeid);
+        MindMap mindMap = mindMapService.getMindMap(nodeId);
         return mindMap.getData();
     }
 
@@ -483,10 +453,7 @@ public class MindMapController {
      * @param rootId
      * @param isShare 0取消分享  1分享思维导图
      */
-
-
-
-    @RequestMapping("shareMap")
+    @RequestMapping(value = "shareMap" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String shareMap(@RequestParam String rootId, String isShare, HttpServletRequest request) throws IOException{
 
@@ -524,7 +491,7 @@ public class MindMapController {
      * @param pageSize
      * @param request
      */
-    @RequestMapping("getShareMap")
+    @RequestMapping(value = "getShareMap" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseMsg getShareMap(@RequestBody String pageNum, String pageSize, HttpServletRequest request){
 
@@ -557,108 +524,16 @@ public class MindMapController {
 
 
     /**
-     * 获取分享的知识图谱总页数
-     */
-   /* @RequestMapping("getShareMapTotal.do")
-    @ResponseBody
-    public Long getShareMapTotal(@RequestBody String requestJsonBody,
-                                 HttpServletRequest request) throws IOException{
-
-        Map<String, Object> map = jsonAnalyze.json2Map(requestJsonBody);
-        String sharetype=String.valueOf(map.get("sharetype"));
-
-        Integer pageSize= (Integer) map.get("pageSize");
-        Long total;
-        try {
-            total=this.tryCatchShareService.countShareByOne("sharetype", sharetype);
-            total=(total-1)/pageSize+1;
-        } catch (Exception e) {
-            // TODO: handle exception
-            return null;
-        }
-
-        if( total.equals("null")||total.equals(null) ){
-            return null;
-        }
-
-        return total;
-    }*/
-
-
-    /**
-     * 打开分享过的知识图谱
-     */
-    /*@RequestMapping("openShareMap.do")
-    @ResponseBody
-    public String openShareMap(@RequestParam String userid,
-                               @RequestParam String nodeid, HttpServletRequest request){
-
-        HttpSession session = request.getSession();
-        String uid = String.valueOf(session.getAttribute("username"));
-
-        MindMap mindMap = tryCatchNewMindService.getMindMap("userid", userid, "nodeid", nodeid);
-
-        return mindMap.getData();
-    }*/
-
-
-    /**
-     * 在思维导图列表中，编辑按钮
-     * @param isShare 0代表
-     * @return
-     */
-   /* @RequestMapping("editMap")
-    @ResponseBody
-    public String delShareMap(@RequestBody String isShare ,HttpServletRequest request) throws IOException{
-
-        HttpSession session=request.getSession();
-        String userId=String.valueOf(session.getAttribute("userId"));
-
-        if( userid.equals("null")|| userid.equals(null) ){
-            return statusMap.a("2");           //尚未登录的
-        }
-
-        if( !userid.equals(deleteUser) ){
-            return statusMap.a("3");           //没有删除权限的
-        }
-
-        Share share=null;
-        try {
-            share=this.tryCatchShareService.getshare("userid", userid, "zsdid", nodeid);
-
-            if(share!=null){
-
-                if(this.tryCatchShareService.delShare(share)){
-                    return statusMap.a("1");      //删除成功
-                }else{
-                    return statusMap.a("5");      //删除失败
-                }
-
-            }
-
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        return statusMap.a("10");
-
-    }*/
-
-
-
-    /**
      * 获取选中节点后面的子节点
      * @param mindNode
      * @return
      */
-    @RequestMapping("getMapChild")
+    @RequestMapping(value = "getMapChild" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getMapChild(@RequestBody MindNode mindNode, HttpServletRequest request){
 
         String rootId = mindNode.getRootId();
         String nodeId = mindNode.getNodeId();
-
-        //HttpSession session = request.getSession();
-        //String userId = String.valueOf(session.getAttribute("userId"));
 
         MindMap mindMap = mindMapService.getMindMap(rootId);
         String activeList = mindMap.getMapList();
@@ -688,7 +563,7 @@ public class MindMapController {
      * @param request
      * @return
      */
-    @RequestMapping("getCompleteMap")
+    @RequestMapping(value = "getCompleteMap" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getCompleteMap(String rootId, HttpServletRequest request){
 
@@ -699,18 +574,17 @@ public class MindMapController {
 
     /**
      * 修改节点颜色
-     * @param requestJsonBody
+     * @param mindNode
      * @param request
      * @return
      */
-    @RequestMapping("setMapColor")
+    @RequestMapping(value = "setMapColor" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public String setMapColor(@RequestBody String requestJsonBody, HttpServletRequest request) throws IOException{
+    public String setMapColor(@RequestBody MindNode mindNode, HttpServletRequest request) throws IOException{
 
-        Map<String, Object> map = jsonAnalyze.json2Map(requestJsonBody);
-        String nodeId = String.valueOf(map.get("nodeId"));
-        Integer color = Integer.parseInt(map.get("color").toString());
-        String rootId = String.valueOf(map.get("rootId"));
+        String nodeId = mindNode.getNodeId();
+        String color = mindNode.getColor();
+        String rootId = mindNode.getRootId();
 
         HttpSession session = request.getSession();
         String userId = String.valueOf(session.getAttribute("userId"));
@@ -742,6 +616,7 @@ public class MindMapController {
         mindMap.setData(open);                              //更新数据
 
         if(mindMapService.updateMindMap(mindMap)){
+            mindNodeService.setMapColor(nodeId,color);
             return statusMap.a("1");
         }
         return statusMap.a("2");
@@ -755,7 +630,7 @@ public class MindMapController {
      * @param requestJsonBody
      * @param request
      */
-    @RequestMapping("saveMapPosition")
+    @RequestMapping(value = "saveMapPosition" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String saveMapPosition(@RequestBody String requestJsonBody, HttpServletRequest request) throws IOException{
 
@@ -763,6 +638,7 @@ public class MindMapController {
         String beforeId=String.valueOf(map.get("beforeId"));
         String afterId=String.valueOf(map.get("afterId"));
         String rootId = String.valueOf(map.get("rootId"));
+        String nodeId = String.valueOf(map.get("nodeId"));
 
         HttpSession session=request.getSession();
         String userId=String.valueOf(session.getAttribute("userId"));
@@ -791,6 +667,8 @@ public class MindMapController {
             }
         }
 
+        mindNodeService.updateNodeParentId(nodeId, afterId);
+
         //更新数据
         String open = mindMapService.openMind(list, rootId);
 
@@ -810,7 +688,7 @@ public class MindMapController {
      * @param requestJsonBody
      * @param request
      */
-    @RequestMapping("saveMapZsd")
+    @RequestMapping(value = "saveMapZsd" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String saveMapZsd(@RequestBody String requestJsonBody, HttpServletRequest request) throws IOException{
 
@@ -836,9 +714,9 @@ public class MindMapController {
         //将知识点描述保存
         Integer i = mindNodeService.saveMapZsd(mindNode);
         if(i > 0){
-            return "保存成功";
+            return statusMap.a("1");
         }else {
-            return "保存失败";
+            return statusMap.a("2");
         }
     }
 
@@ -848,7 +726,7 @@ public class MindMapController {
      * @param requestJsonBody
      * @param request
      */
-    @RequestMapping("getMapZsd")
+    @RequestMapping(value = "getMapZsd" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getZsd(@RequestBody String requestJsonBody, HttpServletRequest request) throws IOException{
         Map<String, Object> map3 = jsonAnalyze.json2Map(requestJsonBody);
@@ -878,10 +756,10 @@ public class MindMapController {
      * @param rootId
      * @param files
      */
-    @RequestMapping("setMapUpload")
+    @RequestMapping(value = "setMapUpload" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public String setMapUpload(@RequestParam("nodeid") String nodeId,
-                               @RequestParam("rootid") String rootId,
+    public String setMapUpload(@RequestParam("nodeId") String nodeId,
+                               @RequestParam("rootId") String rootId,
                                @RequestParam("file") MultipartFile[] files,
                                HttpServletRequest request, HttpServletResponse response) throws IOException{
 
@@ -916,6 +794,7 @@ public class MindMapController {
             String fileName = files[i].getOriginalFilename(); //获取文件全名称
             String preFix1 = fileName.substring(0,fileName.indexOf("."));//获得文件名称
             String preFix2 = fileName.substring(fileName.lastIndexOf(".")+1);//获得文件类型
+            String tubiao = "";
             InputStream in = null;
 
             try {
@@ -937,22 +816,61 @@ public class MindMapController {
                 out.close();
                 in.close();
 
+                if ((preFix2.equals("bmp")) || (preFix2.equals("drw"))
+                        || (preFix2.equals("dxf"))
+                        || (preFix2.equals("eps"))
+                        || (preFix2.equals("gif"))
+                        || (preFix2.equals("jpg"))
+                        || (preFix2.equals("png"))
+                        || (preFix2.equals("pcd"))
+                        || (preFix2.equals("pcx"))) {
+                    preFix2 = "picture";
+                    tubiao = "/assets/avatars/tupian.jpg";
+                } else if ((preFix2.equals("avi"))
+                        || (preFix2.equals("mpeg"))
+                        || (preFix2.equals("mpg"))
+                        || (preFix2.equals("dat"))
+                        || (preFix2.equals("ra")) || (preFix2.equals("rm"))
+                        || (preFix2.equals("wmv"))
+                        || (preFix2.equals("mp4"))
+                        || (preFix2.equals("swf"))
+                        || (preFix2.equals("f4v"))) {
+                    preFix2 = "video";
+                    tubiao = "/assets/avatars/shipin.jpg";
+                } else if ((preFix2.equals("cd"))
+                        || (preFix2.equals("ogg"))
+                        || (preFix2.equals("mp3"))
+                        || (preFix2.equals("asf"))
+                        || (preFix2.equals("wma"))
+                        || (preFix2.equals("wav"))
+                        || (preFix2.equals("rm"))
+                        || (preFix2.equals("midi"))
+                        || (preFix2.equals("ape"))) {
+                    preFix2 = "doc";
+                    tubiao = "/assets/avatars/word.jpg";
+                } else {
+                    preFix2 = "other";
+                    tubiao = "/assets/avatars/tuzhi.jpg";
+                }
+
+                //path = ""+path;
                 //将文件路径存入数据库
                 UploadFile uploadFile = new UploadFile();
                 uploadFile.setUserId(Integer.parseInt(userId));
                 uploadFile.setFileName(preFix1);
                 uploadFile.setFilePath(path);
                 uploadFile.setFileType(preFix2);
+                uploadFile.setTubiao(tubiao);
                 uploadFile.setNodeId(nodeId);
                 fileService.insertNodeFile(uploadFile);
             } catch (Exception e) {
                 logger.info("---------文件上传失败————————");
                 e.printStackTrace();
-                return "上传文件失败";
+                return statusMap.a("2");
             }
         }
 
-        return "上传文件成功";
+        return statusMap.a("1");
     }
 
 
@@ -960,17 +878,14 @@ public class MindMapController {
     /**
      * 获取本节点用户的上传文件（这里不加权限，谁都可以看到）
      * @serialData 2018.6.13
-     * @param mindNode
+     * @param uploadFile
      * @param request
      */
-    @RequestMapping("getMapUpload")
+    @RequestMapping(value = "getMapUpload" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseMsg getMapUpload(MindNode mindNode,
-                               HttpServletRequest request) throws IOException{
+    public ResponseMsg getMapUpload(@RequestBody UploadFile uploadFile, HttpServletRequest request) throws IOException{
 
-        String nodeId = mindNode.getNodeId();
-        //HttpSession session = request.getSession();
-        //String userId = String.valueOf(session.getAttribute("userId"));
+        String nodeId = uploadFile.getNodeId();
         ResponseMsg responseMsg = new ResponseMsg();
 
         List<UploadFile> list = fileService.getUploadeFile(nodeId);
@@ -994,86 +909,22 @@ public class MindMapController {
      * 删除节点上的上传文件
      * @param requestJsonBody
      */
-    @RequestMapping("delMapUpload")
+    @RequestMapping(value = "delMapUpload" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String delMapUpload(@RequestBody String requestJsonBody, HttpServletRequest request) throws IOException{
 
         Map<String, Object> map = jsonAnalyze.json2Map(requestJsonBody);
         String fileId = String.valueOf(map.get("fileId"));
-        String rootId = String.valueOf(map.get("rootId"));
 
         HttpSession session = request.getSession();
         String userId = String.valueOf(session.getAttribute("userId"));
 
-        if (userId == null || userId.equals("")){
+        Integer i = fileService.deleteFileId(Integer.parseInt(fileId), Integer.parseInt(userId));
+        if(i > 0){
+            return statusMap.a("1");
+        }else {
             return statusMap.a("2");
         }
-
-        MindMap mindMap = mindMapService.getMindMap(rootId);
-        String mindUser = mindMap.getUserId().toString();
-
-        //禁止非本节点用户在节点上传文件
-        if (! (userId.equals(mindUser)) ){
-            return statusMap.a("5");
-        }
-        Integer i = fileService.deleteFileId(Integer.parseInt(fileId));
-        if(i > 0){
-            return "删除成功";
-        }else {
-            return "删除失败";
-        }
     }
-
-
-    /**
-     *   乾坤大挪移
-     * @param requestJsonBody
-     * @param request
-     */
-    /*@RequestMapping("changeData.do")
-    @ResponseBody
-    public String changeData(@RequestBody String requestJsonBody,
-                             HttpServletRequest request) throws IOException{
-
-        Map<String, Object> map = jsonAnalyze.json2Map(requestJsonBody);
-        String xx = String.valueOf(map.get("xx"));
-
-        List<MindNode> mapList = tryCatchMindMapService.getMindNode("parentid", "00100");
-
-        //遍历所有图
-        for(Iterator it = mapList.iterator(); it.hasNext();){
-
-            MindNode mind = (MindNode) it.next();
-            String nodeid = mind.getNodeid();
-            String color = mind.getColor();
-            String type = mind.getType();
-            String nodename = mind.getNodename();
-            String userid = mind.getUserid();
-            String realname = null;
-            try {
-                realname = tryCatchUserService.getUserByNickname(userid).getRealName();
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-
-
-            List<MindNode>  listDemo = tryCatchMindMapService.getMindNode("type", type);
-            String open = tryCatchMindMapService.openMind(listDemo, type);
-
-            MindMap mindMap = new MindMap();
-            mindMap.setDate(nodeid);
-            mindMap.setData(open);
-            mindMap.setMaplist(jsonAnalyze.list2Json(listDemo));
-            mindMap.setNodeid(nodeid);
-            mindMap.setRealname(realname);
-            mindMap.setUserid(userid);
-            mindMap.setNodename(nodename);
-
-            tryCatchNewMindService.saveMindMap(mindMap);
-
-        }
-
-        return statusMap.a("1");
-    }*/
 
 }

@@ -24,7 +24,7 @@ public class MindNode implements Serializable {
 
     private Integer isDel;//是否删除
 
-    private Integer color;//颜色
+    private String color;//颜色
 
     private String zsdms;//知识点描述
 }

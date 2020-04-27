@@ -12,6 +12,8 @@ public interface MindMapService {
 
     MindMap getMindMap(String rootId);
 
+    void updateMapName(String rootId, String mapName);
+
     String  openMind(List<MindNode> list, String type) throws IOException;
 
     Boolean updateMindMap(MindMap mindMap);

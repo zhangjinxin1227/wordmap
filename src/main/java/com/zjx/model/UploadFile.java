@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class UploadFile implements Serializable{
 
-	private static final long serialVersionUID = -3457725040023909409L;
 
+	private static final long serialVersionUID = -1814398238617526544L;
 	private Integer fileId;//资料编号
 
 	private Integer userId;//用户编号
@@ -25,4 +25,6 @@ public class UploadFile implements Serializable{
 	private String createTime; // 创建时间
 
 	private String updateTime; // 更新时间
+
+	private String tubiao; //前端展示图标路径
 }

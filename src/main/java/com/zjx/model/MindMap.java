@@ -17,6 +17,8 @@ public class MindMap implements Serializable {
 
     private String rootName;//导图名称
 
+    private String userName;//用户编号
+
     private String data;//导图数据
 
     private String mapList;//导图数据

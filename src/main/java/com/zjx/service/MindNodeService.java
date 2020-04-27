@@ -8,6 +8,14 @@ public interface MindNodeService {
 
     Integer deleteNode(String nodeId);
 
+    void insertNode(MindNode mindNode);
+
+    void updateNodeParentId(String nodeId, String afterId);
+
+    void setMapColor(String nodeId, String color);
+
+    void updateNodeName(String nodeId, String nodeName);
+
     List<MindNode> getNope(List<MindNode> less, List<MindNode> more );
 
     Integer saveMapZsd(MindNode mindNode);

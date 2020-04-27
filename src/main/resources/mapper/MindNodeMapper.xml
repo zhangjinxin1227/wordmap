@@ -9,7 +9,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="is_del" property="isDel" jdbcType="INTEGER" />
-    <result column="color" property="color" jdbcType="INTEGER" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
     <result column="zsd_ms" property="zsdms" jdbcType="LONGVARCHAR" />
 
   </resultMap>
@@ -21,24 +21,33 @@
     update
     mindnode
     set
-    id_del = 1,
+    is_del = 1,
     update_time = NOW()
     where node_id = #{nodeId}
   </update>
 
-  <delete id="deleteNodeFile">
-    DELETE
-    FROM
-    node_file
-    WHERE
+  <insert id="insertNode" parameterType="com.zjx.model.MindNode">
+    insert into
+    mindnode
+    (node_id  , node_name ,  parent_id , user_id)
+    values (#{nodeId}, #{nodeName}, #{parentId}, #{userId})
+  </insert>
+
+  <update id="updateNodeName">
+    update mindnode
+    set
+    node_name = #{nodeName},
+    update_time = NOW()
+    where
     node_id = #{nodeId}
-  </delete>
+    and is_del = 0
+  </update>
 
   <update id="saveMapZsd" parameterType="com.zjx.model.MindNode">
     update
     mindnode
     set
-    zsdms = #{zsdms},
+    zsd_ms = #{zsdms},
     update_time = NOW()
     where node_id = #{nodeId}
     and is_del = 0
@@ -56,4 +65,26 @@
     AND
     m.is_del = 0
   </select>
+
+  <update id="setMapColor">
+    update mindnode
+    set
+    color = #{color},
+    update_time = NOW()
+    where
+    node_id = #{nodeId}
+    and
+    is_del = 0
+  </update>
+
+  <update id="updateNodeParentId">
+    update mindnode
+    set
+    parent_id = #{afterId},
+    update_time = NOW()
+    where
+    node_id = #{nodeId}
+    and
+    is_del = 0
+  </update>
 </mapper>

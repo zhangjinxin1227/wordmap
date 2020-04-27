@@ -25,13 +25,23 @@ public class MindMapServiceImpl implements MindMapService {
     @Override
     public Boolean saveMindMap(MindMap mindMap){
         boolean flag = mindMapMapper.saveMindMap(mindMap);
-        return true;
+        return flag;
     }
 
     //根据根节点id获得整个思维导图
     @Override
     public MindMap getMindMap(String rootId){
         return mindMapMapper.getMindMap(rootId);
+    }
+
+    /**
+     * 用户修改图谱名称
+     * @param rootId 图谱id
+     * @param mapName 名称
+     */
+    @Override
+    public void updateMapName(String rootId, String mapName){
+        mindMapMapper.updateMapName(rootId, mapName);
     }
 
 
@@ -136,8 +146,7 @@ public class MindMapServiceImpl implements MindMapService {
      */
     @Override
     public List<MindNode> getChild(List<MindNode> list, String nodeid, List<MindNode> storage){
-        //这句话貌似没用
-        //judgeHaveChild(list, nodeid, storage);
+        judgeHaveChild(list, nodeid, storage);
 
         for(Iterator it = list.iterator(); it.hasNext();){
             MindNode mindNode = (MindNode) it.next();
@@ -145,6 +154,34 @@ public class MindMapServiceImpl implements MindMapService {
                 storage.add(mindNode);
             }
         }
+        return storage;
+    }
+
+    /**
+     * 获取子节点
+     * @param list
+     * @return
+     */
+    public List<MindNode> judgeHaveChild(List<MindNode> list, String nodeid, List<MindNode> storage){
+
+        String parentid = null;
+        for(Iterator it = list.iterator(); it.hasNext();){
+            MindNode mindNode = (MindNode) it.next();
+            if(mindNode.getParentId().equals(nodeid)){
+                parentid = mindNode.getNodeId();
+                try {
+                    if( !parentid.equals(null) ){
+                        System.out.println("还有下一层");
+                        judgeHaveChild(list, parentid, storage);
+                    }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+
+                storage.add(mindNode);
+            }
+        }
+
         return storage;
     }
 
@@ -236,7 +273,7 @@ public class MindMapServiceImpl implements MindMapService {
             node.id = mindNode.getNodeId();
             node.topic = mindNode.getNodeName();
             node.parentid = mindNode.getParentId();
-            node.color = mindNode.getColor().toString();
+            node.color = mindNode.getColor();
             nodeList.put(node.id, node);
         }
 

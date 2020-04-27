@@ -13,7 +13,7 @@ public interface FileMapper {
     Integer deleteNodeFiles(@Param("nodeId") String nodeId);
 
     //删除fileId对应的文件
-    Integer deleteFileId(@Param("fileId") Integer fileId);
+    Integer deleteFileId(@Param("fileId") Integer fileId, @Param("userId") Integer userId);
 
     Integer insertNodeFile(UploadFile uploadFile);
 

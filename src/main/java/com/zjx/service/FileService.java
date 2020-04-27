@@ -10,7 +10,7 @@ public interface FileService {
     Integer deleteNodeFiles(String nodeId);
 
     //删除fileId对应的文件
-    Integer deleteFileId(Integer fileId);
+    Integer deleteFileId(Integer fileId, Integer userId);
 
     void insertNodeFile(UploadFile uploadFile);
 
