@@ -12,6 +12,11 @@
     <result column="is_del" property="isDel" jdbcType="INTEGER" />
     <result column="is_share" property="isShare" jdbcType="INTEGER" />
     <result column="share_time" property="shareTime" jdbcType="TIMESTAMP" />
+    <result column="integral" property="integral" jdbcType="INTEGER" />
+    <result column="logic_grade" property="logicGrade" jdbcType="INTEGER" />
+    <result column="total_grade" property="totalGrade" jdbcType="INTEGER" />
+    <result column="artistic_grade" property="artisticGrade" jdbcType="INTEGER" />
+    <result column="memory_grade" property="memoryGrade" jdbcType="INTEGER" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -36,6 +41,21 @@
       <if test="mapList != null" >
         maplist,
       </if>
+      <if test="integral != null" >
+        integral,
+      </if>
+      <if test="logicGrade != null" >
+        logic_grade,
+      </if>
+      <if test="totalGrade != null" >
+        total_grade,
+      </if>
+      <if test="artisticGrade != null" >
+        artistic_grade,
+      </if>
+      <if test="memoryGrade != null" >
+        memory_grade,
+      </if>
       is_del,
       is_share
     </trim>
@@ -54,6 +74,21 @@
       </if>
       <if test="mapList != null" >
         #{mapList},
+      </if>
+      <if test="integral != null" >
+        #{integral},
+      </if>
+      <if test="logicGrade != null" >
+        #{logicGrade},
+      </if>
+      <if test="totalGrade != null" >
+        #{totalGrade},
+      </if>
+      <if test="artisticGrade != null" >
+        #{artisticGrade},
+      </if>
+      <if test="memoryGrade != null" >
+        #{memoryGrade},
       </if>
       0,
       0
@@ -130,7 +165,7 @@
     update mind_map
     set
     share_time = NOW(),
-    is_share = 1,
+    is_share = 1
     where
     map_id = #{rootId}
     and
@@ -141,7 +176,7 @@
     update mind_map
     set
     share_time = null,
-    is_share = 0,
+    is_share = 0
     where
     map_id = #{rootId}
     and
@@ -169,4 +204,92 @@
     and
     m.is_share = 1
   </select>
+
+  <select id="getShareMapAllList" resultType="com.zjx.model.MindMap">
+    SELECT
+    m.map_id as mapId,
+    m.node_name as rootName,
+    m.user_id as userId,
+    u.name as userName,
+    m.share_time as shareTime
+    FROM
+    mind_map m, um_t_user u
+    WHERE
+    u.id = m.user_id
+    and
+    u.is_del = 0
+    and
+    m.is_del = 0
+    and
+    m.is_share = 1
+    ORDER BY m.integral DESC
+  </select>
+
+  <select id="getSearchMindByName" resultType="com.zjx.model.MindMap">
+    SELECT
+    m.map_id as mapId,
+    m.node_name as rootName,
+    m.user_id as userId,
+    u.name as userName,
+    m.share_time as shareTime
+    FROM
+    mind_map m, um_t_user u
+    WHERE
+    m.node_name like '%${searchMessage}%'
+    and
+    u.id = m.user_id
+    and
+    u.is_del = 0
+    and
+    m.is_del = 0
+    and
+    m.is_share = 1
+    ORDER BY m.integral DESC
+  </select>
+
+  <select id="getMapGrade" resultType="com.zjx.model.MindMap">
+    select
+    m.node_name as rootName,
+    m.integral,
+    m.logic_grade as logicGrade,
+    m.total_grade as totalGrade,
+    m.artistic_grade as artisticGrade,
+    m.memory_grade as memoryGrade
+    from
+    mind_map m
+    where
+    m.map_id = #{rootId}
+    and
+    m.is_del = 0
+  </select>
+
+  <select id="getMapGradeList" resultType="com.zjx.model.MindMap">
+    select
+    m.map_id as mapId,
+    m.node_name as rootName,
+    m.integral,
+    m.logic_grade as logicGrade,
+    m.total_grade as totalGrade,
+    m.artistic_grade as artisticGrade,
+    m.memory_grade as memoryGrade
+    from
+    mind_map m
+    where
+    m.is_del = 0
+  </select>
+
+  <update id="updateGrade" parameterType="com.zjx.model.MindMap">
+    update mind_map m
+    set
+    m.integral = #{integral},
+    m.logic_grade = #{logicGrade},
+    m.total_grade  = #{totalGrade},
+    m.artistic_grade = #{artisticGrade},
+    m.memory_grade = #{memoryGrade},
+    m.update_time = NOW()
+    where
+    m.map_id = #{rootId}
+    and
+    m.is_del = 0
+  </update>
 </mapper>

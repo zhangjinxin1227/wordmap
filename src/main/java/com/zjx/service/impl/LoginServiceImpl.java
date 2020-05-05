@@ -32,11 +32,33 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public Integer saveUser(UserBean userBean){
-        return userBeamMapper.saveUser(userBean);
+    public Boolean saveUser(UserBean userBean){
+        Integer i = userBeamMapper.saveUser(userBean);
+        //注册用户时，新建用户积分信息
+        Integer temp = userBeamMapper.insertToken(i);
+        if(temp > 0){
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    /**
+     * 获得城市信息
+     * @return
+     */
     @Override
     public List<City> getCityInfo(){
         return userBeamMapper.getCityInfo();
+    }
+
+    /**
+     * 获得城市id
+     * @param cityName
+     * @return
+     */
+    @Override
+    public Integer getCityName(String cityName){
+        return userBeamMapper.getCityName(cityName);
     }
 }

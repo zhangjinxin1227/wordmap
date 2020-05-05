@@ -31,4 +31,8 @@ public interface MindMapService {
     List<MindMap> getShareMapList(String userId);
 
     String openChildMap(List<MindNode> list,String nodeid ,String rootid) throws IOException;
+
+    void newMapToken(Integer userId);
+
+    void mapSystemRating();//系统思维导图自动评分定时任务
 }

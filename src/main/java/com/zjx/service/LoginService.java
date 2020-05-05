@@ -11,7 +11,11 @@ public interface LoginService {
 
     UserBean getUserByNickname(String name);
 
-    Integer saveUser(UserBean userBean);
+    Boolean saveUser(UserBean userBean);
 
     List<City> getCityInfo();
+
+    Integer getCityName(String cityName);
+
+
 }

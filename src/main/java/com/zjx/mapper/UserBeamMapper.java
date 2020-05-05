@@ -15,8 +15,12 @@ public interface UserBeamMapper {
     //判断用户名是否注册成功
     UserBean getUserByNickname(@Param("name") String name);
     //判断用户注册是否成功
-    Integer saveUser(@Param("userBean") UserBean userBean);
+    Integer saveUser(UserBean userBean);
+
+    Integer insertToken(@Param("userId") Integer userId);
 
     List<City> getCityInfo();
+
+    Integer getCityName(@Param("cityName")String cityName);
 
 }

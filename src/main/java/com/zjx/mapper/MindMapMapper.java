@@ -28,4 +28,15 @@ public interface MindMapMapper {
     Integer deleteshareMap(@Param("rootId") String rootId);
 
     List<MindMap> getShareMapList(@Param("userId")Integer userId);
+
+    List<MindMap> getShareMapAllList();
+
+    List<MindMap> getSearchMindByName(@Param("searchMessage") String searchMessage);
+
+    MindMap getMapGrade(@Param("rootId") String rootId);
+
+    //定时任务评分：获得map列表
+    List<MindMap> getMapGradeList();
+
+    void updateGrade(MindMap mindMap);
 }

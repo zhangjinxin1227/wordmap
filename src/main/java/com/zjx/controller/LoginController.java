@@ -13,8 +13,11 @@ import org.slf4j.LoggerFactory;
 /*import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;*/
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -98,7 +101,6 @@ public class LoginController {
 	
 	
 	/**
-	 *@author Ragty
 	 * 验证用户是否登录
 	 * @param request
 	 * @return
@@ -131,74 +133,7 @@ public class LoginController {
 		session.invalidate();
 		return statusMap.a("1");
 	}
-	
-	
-	/**
-	 * @author 张金鑫
-	 *  用户注册接口（增加注册后即登录）
-	 * @param requestJsonBody
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
-	@RequestMapping(value="/register")
-	@ResponseBody
-	public String register(@RequestBody String requestJsonBody, HttpServletRequest request) throws IOException{
-		
-		Map<String, Object> map=jsonAnalyze.json2Map(requestJsonBody);
-		logger.info("注册的用户信息是：" + map);
-		String account = String.valueOf(map.get("account"));
-		String password = String.valueOf(map.get("password"));
-		String phone = String.valueOf(map.get("phone"));
-		String email = String.valueOf(map.get("email"));
-		String name=String.valueOf(map.get("name"));
-		String verifyImage = String.valueOf(map.get("verifyImage"));
-		String role = String.valueOf(map.get("role"));
-		String resultVerifyCode = request.getSession()
-				.getAttribute("verifyCode").toString();
-		
-		//判断输入的验证码是否和系统中的验证码相同
-		if (!checkValidateCode(verifyImage, resultVerifyCode)) {
-			 return statusMap.a("1");
-		}
-		
-		//判断注册的用户名是否用过
-		if (loginService.getUserByNickname(account) != null) {
-			return statusMap.a("2");
-		}
-		
-		//后台限制注册数据，使之不为空
-		if(account.equals("") || password.equals("") || phone.equals("") || email.equals("")|| name.equals("") || verifyImage.equals("")){
-           return statusMap.a("5");			
-		}
-		
-		//将注册信息写入数据库
-		UserBean userInfo = new UserBean();
-		userInfo.setAccount(account);
-		userInfo.setPassword(password);
-		userInfo.setPhone(phone);
-		userInfo.setEmail(email);
-		userInfo.setName(name);
-		
-		HttpSession session = request.getSession();
-		
-		//保存注册信息并登录
-		if (loginService.saveUser(userInfo) > 0) {
-		//	System.out.println("成功保存注册信息");
-		
-			/*//验证成功后将会把返回的Authentication对象存放在SecurityContext
-			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(account, password);
-			Authentication authentication = authenticationManager.authenticate(authRequest); //调用loadUserByUsername
-			SecurityContextHolder.getContext().setAuthentication(authentication);*/
-			
-			session.setAttribute("username", account);
-			session.setMaxInactiveInterval(6*60*60);
-			return this.statusMap.a("3");
-		}
-		
-		return this.statusMap.a("4");
-		
-	}
+
 
 	/**
 	 * @author 张金鑫
@@ -216,10 +151,85 @@ public class LoginController {
 		return true;
 	}
 
-	@GetMapping(value="/getCityInfo")
+
+	/**
+	 * 获取city信息
+	 * @return
+	 */
+	@RequestMapping(value="/getCityInfo", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public List<City> getCityInfo(){
-
 		return loginService.getCityInfo();
+	}
+
+
+	/**
+	 * 用户注册接口（增加注册后即登录）
+	 * @serialData 2018.3.5
+	 * @param requestJsonBody
+	 * @param request
+	 */
+	@RequestMapping(value="/register2", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String register(@RequestBody String requestJsonBody,HttpServletRequest request) throws IOException{
+
+		Map<String, Object> map=jsonAnalyze.json2Map(requestJsonBody);
+		String nickName = String.valueOf(map.get("nickName"));
+		String password = String.valueOf(map.get("password"));
+		String cityName = String.valueOf(map.get("cityId"));//城市名称
+		String phoneNumber = String.valueOf(map.get("phoneNumber"));
+		String email = String.valueOf(map.get("email"));
+		String realName=String.valueOf(map.get("realName"));
+		String verifyImage = String.valueOf(map.get("verifyImage"));
+		String role = String.valueOf(map.get("role"));
+		String result_verifyCode = request.getSession()
+				.getAttribute("verifyCode").toString();
+
+		//判断输入的验证码是否和系统中的验证码相同
+		if (!checkValidateCode(verifyImage, result_verifyCode)) {
+			return this.statusMap.a("1");
+		}
+
+		//判断注册的用户名是否用过
+		if (loginService.getUserByNickname(nickName) != null) {
+			return this.statusMap.a("2");
+		}
+
+		//后台限制注册数据，使之不为空
+		if(nickName.equals("")||password.equals("")||phoneNumber.equals("")||email.equals("")||
+				realName.equals("")||verifyImage.equals("")){
+			return statusMap.a("5");
+		}
+
+		//获得城市名称
+		Integer cityId = loginService.getCityName(cityName);
+		//将注册信息写入数据库
+		UserBean userBean = new UserBean();
+		userBean.setName(realName);
+		userBean.setPassword(password);
+		userBean.setPhone(phoneNumber);
+		userBean.setEmail(email);
+		userBean.setAccount(nickName);
+		userBean.setRoleId(Integer.parseInt(role));  //默认权限设置为2
+		userBean.setCityId(cityId);
+		HttpSession session = request.getSession();
+
+		//保存注册信息并登录
+		if (loginService.saveUser(userBean)) {
+			logger.info("注册成功");
+
+			//验证成功后将会把返回的Authentication对象存放在SecurityContext
+			/*UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(nickName, password);
+			Authentication authentication = authenticationManager.authenticate(authRequest); //调用loadUserByUsername
+			//	System.out.println("调用了");
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+
+			session.setAttribute("username", nickName);
+			session.setMaxInactiveInterval(6*60*60);*/
+			return this.statusMap.a("3");
+		}
+
+		return this.statusMap.a("4");
+
 	}
 }

@@ -153,8 +153,16 @@ public class MindMapController {
         mindmap.setRootName(nodeName);
         mindmap.setUserId(userId);
         mindmap.setMapList(activeData);
+        mindmap.setIntegral(0);
+        mindmap.setLogicGrade(0);
+        mindmap.setTotalGrade(0);
+        mindmap.setMemoryGrade(0);
+        mindmap.setArtisticGrade(0);
+
 
         if(mindMapService.saveMindMap(mindmap)){
+            //用户每次新建导图时都会增加一个积分
+            mindMapService.newMapToken(userId);
             return data;
         }else {
             return statusMap.a("2");
@@ -450,16 +458,18 @@ public class MindMapController {
 
     /**
      * 编辑知识图谱----是否分享
-     * @param rootId
-     * @param isShare 0取消分享  1分享思维导图
+     * @param map
+     *   0取消分享  1分享思维导图
      */
     @RequestMapping(value = "shareMap" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public String shareMap(@RequestParam String rootId, String isShare, HttpServletRequest request) throws IOException{
+    public String shareMap(@RequestBody Map<String, String> map, HttpServletRequest request) throws IOException{
 
         HttpSession session = request.getSession();
         String userId = String.valueOf(session.getAttribute("userId"));
 
+        String rootId = map.get("rootId");
+        String isShare = map.get("isShare");
         MindMap mindMap = mindMapService.getMindMap(rootId);
         String mindUser = mindMap.getUserId().toString();
         //判断是否是用户本人权限
@@ -926,5 +936,7 @@ public class MindMapController {
             return statusMap.a("2");
         }
     }
+
+
 
 }

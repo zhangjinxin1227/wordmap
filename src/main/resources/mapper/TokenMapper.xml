@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zjx.mapper.TokenMapper" >
+  <resultMap id="BaseResultMap" type="com.zjx.model.Token" >
+    <id column="token_id" property="tokenId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="token_get" property="tokenGet" jdbcType="INTEGER" />
+    <result column="token_residue" property="tokenResidue" jdbcType="INTEGER" />
+    <result column="token_cunsume" property="tokenCunsume" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    token_id, user_id, token_get, token_residue , token_cunsume , update_time
+  </sql>
+
+  <select id="getUserToken" resultType="com.zjx.model.Token">
+    SELECT
+    t.token_id as tokenId,
+    t.token_cunsume as tokenCunsume,
+    t.user_id as userId,
+    t.token_get as tokenGet,
+    t.token_residue as tokenResidue
+    FROM
+    token t, um_t_user u
+    WHERE
+    t.user_id = #{userId}
+    AND
+    t.user_id = u.id
+    AND
+    u.is_del = 0
+  </select>
+
+  <update id="newMapToken" parameterType="com.zjx.model.Token">
+    update token
+    set
+    token_residue = #{tokenResidue},
+    token_get = #{tokenGet},
+    update_time = NOW()
+    where
+    user_id = #{userId}
+  </update>
+</mapper>

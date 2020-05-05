@@ -12,6 +12,7 @@
     <result column="city" property="cityId" jdbcType="INTEGER" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="created_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="INTEGER" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -53,7 +54,7 @@
     and is_del = 0
   </select>
 
-  <insert id="saveUser" parameterType="com.zjx.model.UserBean" >
+  <insert id="saveUser" parameterType="com.zjx.model.UserBean" useGeneratedKeys="true" keyProperty="id">
     insert into um_t_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="account != null" >
@@ -74,7 +75,9 @@
       <if test="cityId != null" >
         city,
       </if>
-      creat_time
+      <if test="roleId != null" >
+        role_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="account != null" >
@@ -92,14 +95,20 @@
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="email != null" >
-        #{email,jdbcType=VARCHAR},
-      </if>
       <if test="cityId != null" >
         #{cityId,jdbcType=INTEGER},
       </if>
-      NOW()
+      <if test="roleId != null" >
+        #{roleId},
+      </if>
     </trim>
+  </insert>
+
+  <insert id="insertToken">
+    insert into token
+    (user_id, token_get, token_residue, token_cunsume, update_time)
+    values
+    (#{userId}, 0, 0, 0, NOW())
   </insert>
 
   <select id="getCityInfo" resultType="com.zjx.model.City">
@@ -110,6 +119,15 @@
     city c
     WHERE
     1=1
+  </select>
+
+  <select id="getCityName" resultType="java.lang.Integer">
+    SELECT
+    c.city_id as cityId
+    FROM
+    city c
+    WHERE
+    c.city_name = #{cityName}
   </select>
 </mapper>
   <!--<insert id="insert" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >

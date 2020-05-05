@@ -41,12 +41,9 @@ public class IndexController {
 		return "index";
 	}
 
-	
-	
+
 	/**
-	 * @author Ragty
 	 * 映射注册页面
-	 * @serialData 2018.2.4
 	 * @return
 	 */
 	@RequestMapping(value="register.do")
@@ -56,8 +53,6 @@ public class IndexController {
 	
 	
 	/**
-	 * @author Ragty
-	 * @serialData 2018.2.4
 	 *  映射登陆界面
 	 * @return
 	 */
@@ -68,21 +63,17 @@ public class IndexController {
 	
 	
 	/**
-	 * @author Ragty
-	 * @serialData 2017.11.8
 	 * 映射学生个人信息界面
 	 * @return
 	 */
-    @RequestMapping(value="stuinfo.do")
+    @RequestMapping(value="peopleInfo.do")
     public String stuinfo(){
     	return "stuinfo";
     }
     
     
     /**
-     * @author Ragty
      * 映射权限不足页面
-     * @serialData  2017.11.8
      * @return
      */
     @RequestMapping({ "/access.do" })
@@ -92,9 +83,7 @@ public class IndexController {
 
     
     /**
-     * @author Ragty
      * 生成验证码
-     * @serialData 2018.2.7
      * @param request
      * @param response
      */

@@ -32,4 +32,6 @@ public class UserBean implements Serializable {
     private String address;
 
     private String createTime;//创建时间
+
+    private Integer roleId;
 }

@@ -2,11 +2,13 @@ package com.zjx.service.impl;
 
 import com.zjx.json.JsonAnalyze;
 import com.zjx.mapper.MindMapMapper;
-import com.zjx.model.MindMap;
-import com.zjx.model.MindNode;
-import com.zjx.model.MindNode2Util;
-import com.zjx.model.Node2;
+import com.zjx.mapper.ScoringRecordMapper;
+import com.zjx.mapper.TokenMapper;
+import com.zjx.model.*;
 import com.zjx.service.MindMapService;
+import com.zjx.util.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,7 +21,13 @@ public class MindMapServiceImpl implements MindMapService {
     @Resource
     private MindMapMapper mindMapMapper;
     @Resource
+    private ScoringRecordMapper scoringRecordMapper;
+    @Resource
+    private TokenMapper tokenMapper;
+    @Resource
     private JsonAnalyze jsonAnalyze;
+
+    private static final Logger logger = LoggerFactory.getLogger(MindMapServiceImpl.class);
 
     //新建思维导图
     @Override
@@ -308,5 +316,56 @@ public class MindMapServiceImpl implements MindMapService {
         mindNode2Util.setKcmc(rootid);
         mindNode2Util.setMindJson2("success");
         return this.jsonAnalyze.object2Json(mindNode2Util);
+    }
+
+    /**
+     * 新建思维导图时用户增加一积分
+     */
+    @Override
+    public void newMapToken(Integer userId){
+        //获得用户积分数
+        Token token = tokenMapper.getUserToken(userId);
+        Integer tokenGet = token.getTokenGet() + 1;
+        Integer tokenResidue = token.getTokenResidue() + 1;
+        token.setTokenGet(tokenGet);
+        token.setTokenResidue(tokenResidue);
+        tokenMapper.newMapToken(token);
+    }
+
+    /**
+     * //系统思维导图自动评分定时任务
+     */
+    @Override
+    public void mapSystemRating(){
+        //获得上周时间
+        Map<String, String> mapWeekTime = DateTime.getWeekDate();
+        String weekFirstDate = mapWeekTime.get("weekFirstDate");
+        String weekLastDate = mapWeekTime.get("weekLastDate");
+
+        //获得map列表
+        List<MindMap> grossScore = mindMapMapper.getMapGradeList();
+
+        for (int i = 0; i < grossScore.size(); i++){
+            //1.获得上周用户对该思维导图的平均评分
+            ScoringRecord scoringRecords = scoringRecordMapper.getScoringRecord(grossScore.get(i).getMapId(), weekFirstDate, weekLastDate);
+            //2.获得之后加上grossScore的评分然后再除以2，取整。
+            Integer newNodeLogic = (scoringRecords.getNodeLogic() + grossScore.get(i).getLogicGrade()) / 2;
+            Integer newNodeArtistic = (scoringRecords.getNodeArtistic() + grossScore.get(i).getArtisticGrade()) / 2;
+            Integer newNodeMemory = (scoringRecords.getNodeMemory() + grossScore.get(i).getMemoryGrade()) / 2;
+            Integer newNodeTotal = (scoringRecords.getNodeTotal() + grossScore.get(i).getTotalGrade()) / 2;
+            Integer integral = (newNodeLogic + newNodeArtistic + newNodeMemory + newNodeTotal) / 4;
+            logger.info("newNodeLogic分数是：" + newNodeLogic + "    newNodeArtistic分数是：" +newNodeArtistic+ "   newNodeMemory分数是：" +newNodeMemory+ "   newNodeTotal分数是：" +newNodeTotal);
+
+            MindMap mindMap = new MindMap();
+            mindMap.setArtisticGrade(newNodeArtistic);
+            mindMap.setTotalGrade(newNodeTotal);
+            mindMap.setIntegral(integral);
+            mindMap.setLogicGrade(newNodeLogic);
+            mindMap.setMemoryGrade(newNodeMemory);
+            mindMap.setMapId(grossScore.get(i).getMapId());
+            //3.把该思维导图重新更新分数
+            mindMapMapper.updateGrade(mindMap);
+
+        }
     }
 }

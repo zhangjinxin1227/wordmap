@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>毛线头注册</title>
-<link rel="stylesheet" href="Login/css/style.css">
+<link rel="stylesheet" href="/Login/css/style.css">
 
 <script src="http://www.jq22.com/jquery/1.11.1/jquery.min.js"></script>
-<script src="Login/js/common.js"></script>
+<script src="/Login/js/common.js"></script>
 <!--背景图片自动更换-->
-<script src="Login/js/supersized.3.2.7.min.js"></script>
-<script src="Login/js/supersized-init.js"></script>
+<script src="/Login/js/supersized.3.2.7.min.js"></script>
+<script src="/Login/js/supersized-init.js"></script>
 <!--表单验证-->
-<script src="Login/js/jquery.validate.min.js?var1.14.0"></script>
+<script src="/Login/js/jquery.validate.min.js?var1.14.0"></script>
 
 
 
 	<!--  注册数据提交与接收  -->
 	<script type="text/javascript">
-	
+
 	   $(function(){
 	       $("#register").click(function(){
 	       	Register();
@@ -43,7 +44,28 @@
     
     <!-- 用户注册函数Register -->
     <script type="text/javascript">
-    
+		function getCity() {
+			var html = "";
+			$.ajax({
+				type:"POST",
+				contentType:"application/json",
+				dataType:"json",
+				url:"/login/getCityInfo",
+
+				success:function(data){
+					for(var i = 0; i < data.length; i++){
+						html += "<option class = '"+data[i].cityId+"'>"+data[i].cityName+"</option>";
+					}
+					$("#itemlist").html(html);
+				},
+				error:function(e){
+					alert("连接显示知识点失败");
+				},
+
+			});
+
+		}
+
     function Register(){
     	
     	if($("#nickName").val() == ""){
@@ -80,18 +102,19 @@
                 "email":$("#Email").val(),
                 "realName":$("#realName").val(),
                 "verifyImage":$("#verifyCode").val(),
+				"cityId":$("#city").val(),
                 "role":"2"
             };
           
            
             var data=JSON.stringify(adata);
-
+			console.log("data是："+data)
             $.ajax({
                 type:"POST",
                 contentType:"application/json",
                 dataType:"json",
                 data:data,
-                url:"register2.do",
+                url:"/login/register2",
                 success:function(data){
                     if(data.a=="2"){
                         alert("用户名已经被注册了！");
@@ -127,7 +150,6 @@
     <!--  下面的src是接受返回图片的地址 -->
     <!--  点击图片后更换验证码 -->
     <script type="text/javascript" >
-
         function reloadVerifyCode()
         {
             $(".verifyImage").attr("src","getVerifyCode.do");
@@ -141,7 +163,7 @@
     </script>
 
 
-
+</head>
 <body onkeydown="EnterPress()">
 
 <div class="register-container">
@@ -158,6 +180,14 @@
 			<input id="nickName" type="text" name="username" class="username" placeholder="您的用户名" autocomplete="off"/>
 		</div>
 		<div>
+			<input id="realName" type="text" name="realName"  placeholder="输入真实姓名" autocomplete="off" />
+		</div>
+		<div>
+			<input id="city" type="text" name="city" class="city"  list="itemlist" placeholder="选择地址" autocomplete="off" />
+			<datalist id="itemlist">
+			</datalist>
+		</div>
+		<div>
 			<input id="password" type="password" name="password" class="password" placeholder="输入密码" oncontextmenu="return false" onpaste="return false" />
 		</div>
 		<div>
@@ -166,9 +196,7 @@
 		<div>
 			<input id="phoneNumber" type="text" name="phone_number" class="phone_number" placeholder="输入手机号码" autocomplete="off" />
 		</div>
-		<div>
-			<input id="realName" type="text" name="realName"  placeholder="输入真实姓名" autocomplete="off" />
-		</div>
+
 		<div>
 			<input id="Email" type="email" name="email" class="email" placeholder="输入邮箱地址" oncontextmenu="return false" onpaste="return false" />
 		</div>
@@ -185,6 +213,10 @@
 	</a>
 
 </div>
-
+<script>
+	$(function(){
+		getCity();
+	});
+</script>
 </body>
 </html>

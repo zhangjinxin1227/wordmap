@@ -12,6 +12,7 @@ public class ZjxTest {
 
     public static void main(String[] args) {
 
+        System.out.println(DateTime.getWeekDate());
     }
 
 }
