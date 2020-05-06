@@ -120,28 +120,6 @@
 			},
 		});
 		}
-
-		//查看评论的方法
-		function seeComment(rootId) {
-			var da={"rootId":rootId};
-			var data=JSON.stringify(da);
-			$.ajax({
-				type : "POST",
-				url : "/mindMap/seeComment",
-				contentType:"application/json",
-				data : data,
-				success : function(data) {
-					if(data.length > 0){
-						for(var i = 0; i < data.length; i++){
-
-						}
-					} else {
-						//显示暂无评论
-					}
-				},
-			});
-
-		}
 		
 		
 		/* 点击打开具体的思维导图(这里的kcmc是nodeid) */
@@ -1094,58 +1072,110 @@
       
       /*侧边栏 讨论  */
         }
-       	.app {
-		    height: 100%;
-		    min-height: 500px;
-		    width: 354px;
-		    float: right;
-		    background: #eeeeee87;
-		    /* position: fixed; */
-		    right: 0px;
-		    top: 50px;
-		    z-index: 10;
-        } 
-    	
-        .leftbtn{ 
-            height: 0;
-            width: 0;
-            
-            border-top: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 10px solid transparent;
-            border-left: 10px solid #1abc9c;
-           
-            z-index: 5;
-            position: fixed;
-            top: 48%;
-            /* right: 222px; */
-            cursor: pointer;
-        }
+
+		.app {
+			height: 100%;
+			min-height: 500px;
+			width: 354px;
+			float: right;
+			background: #eeeeee87;
+			/* position: fixed; */
+			right: 0px;
+			top: 50px;
+			z-index: 10;
+		}
+
+		.leftbtn{
+			width: 32px;
+			height: 60px;
+			margin: 0 auto;
+			padding-top: 15px;
+			position: relative;
+			background: #ef6819;
+			color: white;
+			font-size: 11px;
+			letter-spacing: 0.2em;
+			text-align: center;
+			text-transform: uppercase;
+
+			z-index: 5;
+			position: fixed;
+			top: 48%;
+			right: 354px;
+			cursor: pointer;
+		}
+		.leftbtn:after {
+			content: ' ';
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 0;
+			height: 0;
+			border-bottom: 21px solid #c7fae7c7;
+			border-left: 16px solid transparent;
+			border-right: 16px solid transparent;
+		}
        
-        .rightbtn{ 
-            height: 0;
-            width: 0;
-            
-            border-top: 10px solid transparent;
-            border-right: 10px solid #1abc9c;
-            border-bottom: 10px solid transparent;
-            border-left: 10px solid transparent;
-            
-            z-index: 5;
-            position: fixed;
-            top: 48%;
-            right: 0;
-            cursor: pointer;
-        }
+        .rightbtn{
+			width: 32px;
+			height: 60px;
+			margin: 0 auto;
+			padding-top: 15px;
+			position: relative;
+			background: #ef6819;
+			color: white;
+			font-size: 11px;
+			letter-spacing: 0.2em;
+			text-align: center;
+			text-transform: uppercase;
+
+			z-index: 5;
+			position: fixed;
+			top: 48%;
+			right: 0;
+			cursor: pointer;
+		}
+		.rightbtn:after {
+			content: ' ';
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 0;
+			height: 0;
+			border-bottom: 21px solid #c7fae7c7;
+			border-left: 16px solid transparent;
+			border-right: 16px solid transparent;
+		}
        
         .none{
             display: none;
         }
-        
-        .inline{
-            display: inline;
-        }
-        
+
+		 #message{
+
+		 }
+
+		 .comment{
+			 width: 400px;
+			 position: relative;
+			 left: 10px;
+			 overflow: auto;
+		 }
+		.commentHr{
+			margin-top: 2px;
+			margin-bottom: 2px;
+			border: 0;
+			border-top: 1px solid #ffba89;
+		}
+        .commentMSG{
+			font-size: 12px;
+			color:black;
+		}
+		 .commentUser{
+			 font-size: 12px;
+			 font-weight: 900;
+			 color:#0b6cbc;
+		 }
         </style>
     
    <!--讨论里面的样式  -->
@@ -1186,151 +1216,8 @@
       
       .message{width: 100px;}
     </style>
+     
 
-
-
-     <!-- mindChat 连接服务器 -->
-     <script type="text/javascript">
-     
-          var websocket = null;
-          var  div=document.getElementById("app");
-          
-        
-         function link(){
-        	
-             if('WebSocket' in window){
-            
-            	 var user =parent.getCurrentUser();  //获取当前登录用户id
-            	
-            	 var room =parent.getRootId();       //获取当前打开知识图谱的RootId(相当于房间号)
-            	 
-            	 if(room == false || user == false){
-            		 return false;
-            	 } 
-            	 
-            	 var url = "ws://" + window.location.host +"/WebSocketManytoMany/"+user+","+room;
-            	 websocket = new WebSocket(url);
-             } else {
-            	
-            	alert("当前浏览器不支持webSocket");
-             }     
-             
-             //连接失败时
-             websocket.onerwror = function() {
-            	 setMessageInnerHTML("WebSocket连接发生错误...");  
- 		     };
- 		     
- 		     //连接成功建立的回调方法  
- 		     websocket.onopen = function() {  
- 		         /* setMessageInnerHTML("WebSocket连接成功");   */
- 		     }
-        	 
- 		     
- 		  	//接收到消息的回调方法  
- 		    websocket.onmessage = function(event) {  
- 		        console.log("回调信息",event.data)
- 		        setMessageInnerHTML(event.data);
- 		    }
- 		  	
- 		  	
- 		    //连接关闭的回调方法  
-		    websocket.onclose = function() {  
-		        setMessageInnerHTML("WebSocket连接关闭");  
-		    }  
- 		    
- 		    
-		    //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。  
-		    if(div.className=="none"){
-		    	 websocket.onclose = function() {  
-		    		
-		    		 closeWebSocket();  
-				    }  
-		    	}
-		    
-		   /*  window.onbeforeunload = function() {  
-		        closeWebSocket();  
-		    }   */
-        	 
-         }
-     
-     </script>
-     
-     
-     <!-- 关闭webSocket及消息发送 -->
-     <script type="text/javascript">
-    
-     //将消息显示在网页上
-     function setMessageInnerHTML(innerHTML) {  
-    	 var date = new Date();
-    	 var hours = date.getHours();
-    	 var min = formatTime(date.getMinutes());
-    	 var sec = formatTime(date.getSeconds());
-    	 
-	     document.getElementById('message').innerHTML += "<div id='hh'><span class='time'>"+hours+":"+min+"</span></div>" +innerHTML ;
-	    } 
-     
-     
-     //关闭WebSocket连接  
-     function closeWebSocket() { 
-    	 
-     
-         websocket.close();  
-     }  
-     
-     //发送消息
-     function send(){
-    	 
-    	 var message = document.getElementById('text123').value;  
-    
-	        //mmessage作为发送的信息，role作为发送的对象标识，socketId是此次会话的标识  
-	        var user = parent.getCurrentUser();    //获取当前登录用户id
-           var room = parent.getRootId();      //获取当前打开知识图谱的RootId(相当于房间号)
-	       if(message.length !=0){   //判断消息不为空
-           var aa = {
-	        		'message':message,	//发送的信息
-	        		'role':user,	//用户账号
-	        		'room':room	//聊天室 
-	        	}
-	       
-	        var data = JSON.stringify(aa);
-	        websocket.send(data);
-	        document.getElementById('text123').value = "";
-	       }
-     }
-     
-     </script>
-     
-     
-     <!-- 加载此页面时连接WebSocket --> 
-     <script type="text/javascript">
-    
-  		$('#app').onclick=function(){
-  			 link();
-  		} 
-       
-     </script>
-
-
-     <!-- 回车发送消息 -->
-     <script type="text/javascript">
-     
-     function enter(){
-  
-    	 if(event.keyCode == 13){
-    		 send();
-    	 }
-    	 
-     }
-     
-     //格式化时间
-     function formatTime (i){
-    	    if(i < 10){
-    	      i = "0" + i;
-    	    }
-    	    return i;
-     }
-     
-     </script>
      
    
 <body>
@@ -1398,46 +1285,94 @@
 	    </div>
 		<div class="menu-sep"></div>
 	    </div>
-	 
-	<!--思维导图侧边栏，讨论界面  -->    
-	<div id="app" class="none" style="position: fixed;">
-	    
-	    <div class="none" id="btn" title="隐藏聊天界面"></div>
-	    
-	    <!-- 聊天对话显示框 -->
-	    <div id="message" style="height:620px;OVERFLOW:auto;"></div>
-	    
-	   	<input id="text123" type="text"   style="height:36px;width:275px;position: fixed;bottom: 10px;right:78px;" onkeydown="enter()"/>
-	    <button type="button" style="height:35px;border: 1px solid transparent;border-radius: 0 5px 5px 0 !important;background-color:#1abc9c;position: fixed; bottom: 10px; right: 15px;" onclick="send()">发送消息</button>
-	</div> 
-    <div class="rightbtn" id="btn2" title="显示聊天界面"></div>
 
-    	
-   </div>
+	 <!--思维导图侧边栏，讨论界面  -->
+	 <div id="app" class="none" style="position: fixed;">
+
+		 <div class="none" id="btn" title="隐藏聊天界面">评论</div>
+
+		 <!-- 聊天对话显示框 -->
+		 <div id="message" style="height:620px;OVERFLOW:auto;"></div>
+	 </div>
+	 <div class="rightbtn" id="btn2" title="显示聊天界面">评论</div>
+
 	 <script>
-	 
-	 		
-			/*聊天的js操作*/
-            var oApp = document.getElementById('app');
-            var oBtn = document.getElementById('btn');//leftbtn
-            var oBtn2 = document.getElementById('btn2');//rightbtnS
 
-            oBtn.onclick=function(){
-            	
-                oApp.className="none";
-                oBtn2.className="rightbtn";   
-            }
-            oBtn2.onclick=function(){
-                oApp.className="app";
-                oBtn2.className="none";
-                oBtn.className="leftbtn";
-                link();
-            }
-      </script>
 
-	
-	
-	<input id="mapid" type="text" value="" hidden />
+		 /*聊天的js操作*/
+		 var oApp = document.getElementById('app');
+		 var oBtn = document.getElementById('btn');//leftbtn
+		 var oBtn2 = document.getElementById('btn2');//rightbtnS
+
+		 oBtn.onclick=function(){
+			 oApp.className="none";
+			 oBtn2.className="rightbtn";
+
+		 }
+		 oBtn2.onclick=function(){
+			 oApp.className="app";
+			 oBtn2.className="none";
+			 oBtn.className="leftbtn";
+			 seeComment();
+		 }
+
+		 //查看评论的接口
+		 function seeComment() {
+		 	var html = "";
+			 var rootId = parent.getRootId();
+			 console.log("当前的思维导图id号是："+ rootId);
+			 var da = {"rootId": rootId};
+			 var data=JSON.stringify(da);
+			 $.ajax({
+				 type : "POST",
+				 url : "/expandThinking/seeComment",
+				 contentType:"application/json",
+				 data : data,
+				 success : function(data) {
+					 if(data.length > 0){
+						 $("#message").css({"height": "620px",
+							 "font-size": "",
+							 "width": "442px",
+							 "color": "",
+							 "display": "",
+							 "vertical-align": "",
+							 "text-align": ""});
+						 for(var i = 0; i < data.length; i++){
+							html+="<div class='comment'><ul class='commentUser'>"+data[i].userAccount+"：</ul><ul class='commentMSG'>"+data[i].mapRemark+"</ul></div><hr class='commentHr'>";
+						 }
+						 $("#message").html(html);
+					 } else {
+						 var divShow = $("#message");
+						 divShow.text("");// 清空数据
+					 	$("#message").css({"height": "620px",
+						 "font-size": "30px",
+						 "width": "442px",
+						 "color": "#f5f5f5d4",
+						 "display": "table-cell",
+						 "vertical-align": "middle",
+						 "text-align": "center"});
+
+
+						 divShow.append("暂无评论");
+					 }
+				 },
+			 });
+
+
+		 }
+
+
+		 $('#app').onclick=function(){
+			 seeComment();
+		 }
+
+
+	 </script>
+
+
+
+
+	 <input id="mapid" type="text" value="" hidden />
     <input id="nodeid" type="text" value="" hidden />
     <input id="rootid" type="text" value="" hidden />
 

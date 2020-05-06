@@ -5,6 +5,8 @@ import com.zjx.mapper.ScoringRecordMapper;
 import com.zjx.model.MindMap;
 import com.zjx.model.ScoringRecord;
 import com.zjx.service.ExpandThinkingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,9 +17,11 @@ public class ExpandThinkingServiceImpl implements ExpandThinkingService {
 
     @Resource
     private MindMapMapper mindMapMapper;
-
     @Resource
     private ScoringRecordMapper scoringRecordMapper;
+
+    private static final Logger logger = LoggerFactory.getLogger(MindMapServiceImpl.class);
+
 
 
     /**
@@ -34,7 +38,9 @@ public class ExpandThinkingServiceImpl implements ExpandThinkingService {
      */
     @Override
     public List<ScoringRecord> getSeeComment(String rootId){
-        return scoringRecordMapper.getSeeComment(rootId);
+        List<ScoringRecord> list = scoringRecordMapper.getSeeComment(rootId);
+        logger.info("该思维导图的评论是："+list);
+        return list;
     }
 
     /**

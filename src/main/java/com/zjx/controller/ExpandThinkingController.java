@@ -84,8 +84,8 @@ public class ExpandThinkingController {
      */
     @RequestMapping(value = "/seeComment" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<ScoringRecord> seeComment(@RequestBody String rootId){
-        return expandThinkingService.getSeeComment(rootId);
+    public List<ScoringRecord> seeComment(@RequestBody Map<String, String> map){
+        return expandThinkingService.getSeeComment(map.get("rootId"));
     }
 
     /**
