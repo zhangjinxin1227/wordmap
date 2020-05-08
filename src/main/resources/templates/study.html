@@ -14,6 +14,11 @@
 <link rel="stylesheet" type="text/css" href="/mindmap/style.css" />
 <link rel="stylesheet" type="text/css" href="/mindmap/noJS.css" />
 
+	<!--模态框-->
+	<link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 <style type="text/css">
 .map-block{
 	width: 1200px;
@@ -113,6 +118,169 @@
 		background: -moz-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
 		background: -ms-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
 	}
+
+.app {
+	height: 100%;
+	min-height: 500px;
+	width: 354px;
+	float: right;
+	background: #eeeeee87;
+	/* position: fixed; */
+	right: 0px;
+	top: 50px;
+	z-index: 10;
+}
+
+.leftbtn{
+	width: 32px;
+	height: 60px;
+	margin: 0 auto;
+	padding-top: 15px;
+	position: relative;
+	background: #ef6819;
+	color: white;
+	font-size: 11px;
+	letter-spacing: 0.2em;
+	text-align: center;
+	text-transform: uppercase;
+
+	z-index: 5;
+	position: fixed;
+	top: 48%;
+	right: 354px;
+	cursor: pointer;
+}
+.leftbtn:after {
+	content: ' ';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 21px solid #c7fae7c7;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
+}
+
+.rightbtn{
+	width: 32px;
+	height: 60px;
+	margin: 0 auto;
+	padding-top: 15px;
+	position: relative;
+	background: #ef6819;
+	color: white;
+	font-size: 11px;
+	letter-spacing: 0.2em;
+	text-align: center;
+	text-transform: uppercase;
+
+	z-index: 5;
+	position: fixed;
+	top: 48%;
+	right: 0;
+	cursor: pointer;
+}
+.rightbtn:after {
+	content: ' ';
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-bottom: 21px solid #c7fae7c7;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
+}
+
+.none{
+	display: none;
+}
+
+#message{
+
+}
+
+.comment{
+	width: 400px;
+	position: relative;
+	left: 10px;
+	overflow: auto;
+}
+.commentHr{
+	margin-top: 2px;
+	margin-bottom: 2px;
+	border: 0;
+	border-top: 1px solid #ffba89;
+}
+.commentMSG{
+	font-size: 12px;
+	color:black;
+}
+.commentUser{
+	font-size: 12px;
+	font-weight: 900;
+	color:#0b6cbc;
+}
+
+
+	/*模态框*/
+h4{
+	text-align: center;
+}
+
+.c-right{
+	width:100%;
+	height:365px;
+	border: 1px solid #fff;
+	background-color: #fff;
+}
+.foot a{
+	text-decoration-line: none;
+}
+.one {
+	width: 40%;
+	height: 40px;
+	margin-top: 5px;
+	margin-left: 35px;
+	border-radius: 5px;
+	color: #999;
+	line-height: 40px;
+	padding-left: 16px;
+	border: 1px solid #e5e5e5;
+}
+.login_submit {
+	width: 62%;
+	height: 25px;
+	color: #fff;
+	background: #FB5C5A;
+	border: 0;
+	margin-left: 45px;
+	outline: none;
+	border-radius: 3px;
+}
+.footer{
+	width: 100%;
+	height:80px;
+	border: 1px solid #333333;
+	background-color:#333333;
+	margin-left: 200px;
+}
+#pingyu{
+	position: absolute;
+	left: 118px;
+}
+#words{
+	height: 140px;
+	width: 260px;
+	position: absolute;
+	right: 118px;
+	border-radius: 5px;
+	color: #999;
+	line-height: 20px;
+	padding-left: 16px;
+	border: 1px solid #e5e5e5;
+}
 </style>
 </head>
 <body background="#fff">
@@ -130,13 +298,137 @@
 	</div>
 
 	<div class="row map-block" id="jsmind_container" style="width:100%;margin-left:10px;height:950px;position: relative;">
-		<!-- 搜索框 -->
-
 	</div>
+
+	<!--思维导图侧边栏，讨论界面  -->
+	<div id="app" class="none" style="position: fixed;">
+
+		<div class="none" id="btn" title="隐藏聊天界面">评论</div>
+
+		<!-- 评论显示框 -->
+		<div id="message" style="height:620px;OVERFLOW:auto;"></div>
+	</div>
+	<div class="rightbtn" id="btn2" title="显示聊天界面">评论</div>
+
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						思维导图评分
+					</h4>
+				</div>
+
+				<div class="modal-body">
+					<div id="div2" class="div2 Absolute-Center">
+						<center>
+							<div class="c-right">
+								<div class="middle">
+									<p>知识逻辑性评分:<input type="text" id="nodeLogic" class="one"  placeholder="0~100的分数"></p>
+									<p>知识完整度评分:<input type="text" id="nodeTotal" class="one"  placeholder="0~100的分数"></p>
+									<p>导图美观度评分:<input type="text" id="nodeArtistic" class="one"  placeholder="0~100的分数"></p>
+									<p>导图记忆性评分:<input type="text" id="nodeMemory" class="one"  placeholder="0~100的分数"></p>
+									<p id="pingyu">评语：</p>
+									<p><textarea name="" id="words" maxlength="100" style="vertical-align:top;outline:none;" placeholder="您的评语是我更完整"></textarea></p>
+
+								</div>
+							</div>
+						</center>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" onclick="mark()">
+						提交打分
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+
+
+		/*聊天的js操作*/
+		var oApp = document.getElementById('app');
+		var oBtn = document.getElementById('btn');//leftbtn
+		var oBtn2 = document.getElementById('btn2');//rightbtnS
+
+		oBtn.onclick=function(){
+			oApp.className="none";
+			oBtn2.className="rightbtn";
+
+		}
+		oBtn2.onclick=function(){
+			oApp.className="app";
+			oBtn2.className="none";
+			oBtn.className="leftbtn";
+			seeComment();
+		}
+
+		//查看评论的接口
+		function seeComment() {
+			var html = "";
+			var rootId = parent.getRootId();
+			console.log("当前的思维导图id号是："+ rootId);
+			var da = {"rootId": rootId};
+			var data=JSON.stringify(da);
+			$.ajax({
+				type : "POST",
+				url : "/expandThinking/seeComment",
+				contentType:"application/json",
+				data : data,
+				success : function(data) {
+					if(data.length > 0){
+						$("#message").css({"height": "620px",
+							"font-size": "",
+							"width": "442px",
+							"color": "",
+							"display": "",
+							"vertical-align": "",
+							"text-align": ""});
+						for(var i = 0; i < data.length; i++){
+							html+="<div class='comment'><ul class='commentUser'>"+data[i].userAccount+"：</ul><ul class='commentMSG'>"+data[i].mapRemark+"</ul></div><hr class='commentHr'>";
+						}
+						$("#message").html(html);
+					} else {
+						var divShow = $("#message");
+						divShow.text("");// 清空数据
+						$("#message").css({"height": "620px",
+							"font-size": "30px",
+							"width": "442px",
+							"color": "#f5f5f5d4",
+							"display": "table-cell",
+							"vertical-align": "middle",
+							"text-align": "center"});
+
+
+						divShow.append("暂无评论");
+					}
+				},
+			});
+
+
+		}
+
+
+		$('#app').onclick=function(){
+			seeComment();
+		}
+
+
+	</script>
 
 	<input id="mapid" type="text" value="" hidden />
 	<input id="nodeid" type="text" value="" hidden />
 	<input id="rootid" type="text" value="" hidden />
+	<input class="bootMapId" type="hidden" value="">
 
 
 <!-- js文件加载和css head里主要是用来响应调用  body里用来渲染界面 -->
@@ -211,7 +503,7 @@
 						html+="<td>"+mapList[i].userName+"</td>";
 						html+="<td><span class='link-style' onclick='open_ajax3("+mapList[i].mapId+");'>"+"查看图谱"+"</span></td>";
 						html+="<td><span class='link-style' onclick='getMapGrade("+mapList[i].mapId+");'>"+"综合评分"+"</span></td>";
-						html+="<td><span class='link-style' onclick='mark("+mapList[i].mapId+")'>"+"打分"+"</span></td>";
+						html+="<td><span class='link-style' data-toggle='modal' data-target='#myModal' onclick='value("+mapList[i].mapId+")'>打分</span></td>";
 						html+="</tr>";
 					}
 
@@ -229,10 +521,63 @@
 		});
 
 	}
+    /*判断是否为整数*/
+	function isInteger(obj) {
+		return Math.floor(obj) == obj
+	}
 
 	/*打分按钮*/
-	function mark(rootId) {
+	function mark() {
+		var nodeLogic = $("#nodeLogic").val();
+		var nodeTotal = $("#nodeTotal").val();
+		var nodeArtistic = $("#nodeArtistic").val();
+		var nodeMemory = $("#nodeMemory").val();
+		var words = $("#words").val();
+		var mapId = $(".bootMapId").val();
+		if(isInteger(nodeLogic)
+				&& isInteger(nodeTotal)
+				&& isInteger(nodeArtistic)
+				&& isInteger(nodeMemory)
+				&& nodeLogic <= 100
+				&&  nodeTotal <= 100
+				&& nodeArtistic <= 100
+				&& nodeMemory <= 100) {
+			var data = {
+				"nodeLogic": nodeLogic,
+				"nodeTotal": nodeTotal,
+				"nodeArtistic": nodeArtistic,
+				"nodeMemory": nodeMemory,
+				"mapRemark": words,
+				"rootId": mapId
+			};
+			var da = JSON.stringify(data);
+			$.ajax({
+				type: "post",
+				contentType: "application/json",
+				data: da,
+				url: "/expandThinking/userMark",
+				success: function (data) {
+					if (data.code == 200) {
+						alert(data.msg);
+						getMyMindMap();
+					} else {
+						alert(data.msg);
+					}
+				},
 
+				error: function (e) {
+					alert("连接网络失败");
+				}
+
+			});
+		} else {
+			alert("请输入正确类型")
+		}
+	}
+
+	/*用于模态框传值*/
+	function value(mapId){
+		$(".bootMapId").val(mapId);
 	}
 
 

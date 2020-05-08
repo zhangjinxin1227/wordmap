@@ -579,59 +579,6 @@
 			
 		}
 		
-		
-		/* 右键菜单，粘贴子标签方法*/
-		function paste_node(){
-
-			
-			Date.prototype.Format = function (fmt) { // author: meizz
-                var o = {
-                "M+": this.getMonth() + 1, // 月份
-                "d+": this.getDate(), // 日
-                "h+": this.getHours(), // 小时
-                "m+": this.getMinutes(), // 分
-                "s+": this.getSeconds(), // 秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
-                "S": this.getMilliseconds() // 毫秒
-                     };
-                if (/(y+)/.test(fmt))
-                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-                for (var k in o)
-                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-                 return fmt;
-				}
-				
-			var v= document.getElementsByClassName("oInput"); //获取复制时 oInput 元素 返回类型是数组
-			var rootid=getRootId(); //获取根节点id
-			var time=new Date().Format("yyyyMMddhhmmss");
-            var copyValue=copyinfo;  //获取OInput中的 value值
-            var selected_id = get_selected_nodeid();
-            var data={
-            		"rootid":rootid,
-            		"nodedate" :time,
-            		"parentid":selected_id,      //原来节点的nodeid，这样才可以串起来
-            		"MindNodeToollist":copyValue
-            };
-            console.log(copyValue);
-            $.ajax({
-				type: "post",
-				url: "/mindMap/paste_node",
-				data : JSON.stringify(data),
-				contentType:"application/json",
-				dataType:"json",
-				async:false, 
-				success : function(json) {
-					//将传来的数据放入剪切板
-				   var qwe=json;
-					console.log(qwe);
-				},
-			});
-
-			var dd= document.getElementById(".oInput").val();
-			alert("dd是:"+dd);
-
-		}
-		
 
         <!-- 这个注释还是比绿色的好看..... -->
         <!--  新增子标签,增加之后保存-->
