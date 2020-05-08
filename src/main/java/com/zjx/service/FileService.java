@@ -15,4 +15,6 @@ public interface FileService {
     void insertNodeFile(UploadFile uploadFile);
 
     List<UploadFile> getUploadeFile(String nodeId);
+
+    List<UploadFile> getAllFile(Integer userId);
 }

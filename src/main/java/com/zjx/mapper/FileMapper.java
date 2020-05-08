@@ -22,6 +22,9 @@ public interface FileMapper {
     //获得某个节点上的文件
     List<UploadFile> getUploadeFile(@Param("nodeId") String nodeId);
 
-    //获得用户上传的文件
-    List<UploadFile> getUserUploadeFile(@Param("nodeId") String nodeId);
+    /*//获得用户在该节点上上传的文件
+    List<UploadFile> getUserUploadeFile(@Param("nodeId") String nodeId);*/
+
+    //获得用户所有的资源文件
+    List<UploadFile> getAllFile(@Param("userId") Integer userId);
 }

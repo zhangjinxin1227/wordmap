@@ -633,43 +633,6 @@
 		}
 		
 
-		/*右键菜单，复制该标签方法*/
-		function copy_node(){
-			
-			var benid=get_selected_nodeid();  //获取节点id
-			var  zi=jm.get_node(benid).children;  //获取该节点的子节点
-			var benname=get_selected_nodeName();   //获取该节点名称
-			 var rootid = getRootId();
-		
-			  var  da={
-					 "nodeid":benid,
-					 "nodename":benname,
-					 "rootid":rootid
-			  }
-			$.ajax({
-				type : "POST",
-				url : "/mindMap/copyNode",
-				data : da,
-				async:false, 
-				success : function(json) {
-					//将传来的数据放入剪切板
-				   
-					 var oInput = document.createElement('input');
-				        oInput.value =json;
-					       alert(json);
-				        document.body.appendChild(oInput);
-				         oInput.className = 'oInput';
-				         $(".oInput").select(); // 选择对象
-				         
-				        document.execCommand("Copy"); // 执行浏览器复制命令
-				
-				       oInput.style.display='none';
-				         alert('复制成功');   
-
-				   
-				},
-			});
-		}
         <!-- 这个注释还是比绿色的好看..... -->
         <!--  新增子标签,增加之后保存-->
         /* 右边菜单要调用的方法??? */

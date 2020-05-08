@@ -105,7 +105,23 @@
     f.is_del = 0
   </select>
 
-  <select id="getUserUploadeFile" resultType="com.zjx.model.UploadFile">
+  <!--<select id="getUserUploadeFile" resultType="com.zjx.model.UploadFile">
+    SELECT
+    f.file_id as fileId,
+    f.file_name as fileName,
+    f.file_path as filePath,
+    f.file_type as fileType,
+    f.node_id as nodeId,
+    f.tubiao as tubiao
+    FROM
+    file f
+    WHERE
+    f.user_id = #{userId}
+    AND
+    f.is_del = 0
+  </select>-->
+
+  <select id="getAllFile" resultType="com.zjx.model.UploadFile">
     SELECT
     f.file_id as fileId,
     f.file_name as fileName,

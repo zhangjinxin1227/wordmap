@@ -50,4 +50,16 @@ public class FileServiceImpl implements FileService {
         logger.info("数据库查到的文件列表是："+list);
         return list;
     }
+
+    /**
+     * 获得用户所有资源文件
+     * @param userId 用户id
+     * @return
+     */
+    @Override
+    public List<UploadFile> getAllFile(Integer userId){
+        List<UploadFile> list = fileMapper.getAllFile(userId);
+        logger.info("获得本用户的文件总数是："+ list.size() + "个");
+        return list;
+    }
 }

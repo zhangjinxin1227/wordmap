@@ -400,9 +400,55 @@
 	    }
 	}
 
+	<!-- 获得选中的子节点  -->
+	function get_selected_node(){
+		var select_node=jm.get_selected_node();
+		if(!!select_node){
+			return selected_node;
+		}else{
+			return null;
+		}
+	}
+
+	<!-- 判断选中的节点是否为根节点 -->
+	function selected_ifRoot(){
+		var selected_node = jm.get_selected_node();
+		if (!!selected_node) {   //两个叹号是为了将之数据类型转换为布朗型的
+			return selected_node.isroot;
+		} else {
+			return null;
+		}
+	}
+
+	<!-- 获取当前知识图谱的根节点 -->
+	function getRootId(){
+		var rootid = null;
+		rootid = document.getElementById('rootid').value;
+
+		if(rootid == "undenfined" || rootid == "" || rootid == null ){
+			return false;
+		} else {
+			return rootid;
+		}
+
+	}
+
+	<!-- 获取当前用户id -->
+	function getCurrentUser(){
+		var currentUserUser = null;
+		currentUserUser = sessionStorage.getItem("username");
+
+		if(currentUserUser == "undenfined" || currentUserUser == "" || currentUserUser == null ){
+			return false;
+		} else {
+			return currentUserUser;
+		}
+
+	}
+
 	/* 根据点击获取子节点的type，显示弹出框  */
 	$("jmnode").live('click', function(e) {
-		var a = "summer.do";
+		var a = "/mindMap/summer";
 		_iframe(a);
 	});
 

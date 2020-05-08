@@ -32,45 +32,56 @@
 		    text-align: left;
 		}
      </style>
+
+  <!-- AJAX上传文件 -->
+  <script type="text/javascript">
+
+	  function upload(){
+		  var formData = new FormData();
+		  var name = $("#wenjian").val();
+		  console.log("name:"+name);
+		  formData.append("file",$("#wenjian")[0].files[0]);
+		  console.log(formData);
+		  $.ajax({
+			  url: '/filesInfo/uploadallfile',
+			  type: 'post',
+			  data : formData,
+			  processData : false,
+			  contentType : false,
+
+			  success: function (data) {
+				  if(data.a == "1"){
+					  getAll(0,0);  //上传成功
+				  } else if(data.a == "2"){
+					  alert("上传文件失败");
+					  getAll(0,0);
+				  }
+			  },
+			  error: function (data, status, e) { ////修改
+				  alert("服务器向你抛了个异常");
+				  getAll(0,0);
+			  }
+		  });
+
+	  }
+  </script>
   
   
   
   <body>
      	
       <div>
-		
-		<div id="test2" class="l_nav"  style="top:50px;width:90px">
-		<ul>
-		<li  style="width:90px"><span class="glyphicon glyphicon-asterisk"></span><a href="view.do" id="mys">我的资源</a></li>
-		<li  style="width:90px"><span class="glyphicon glyphicon-briefcase"></span><a href="collection.do" >学习收藏</a></li>
-		<li  style="width:90px"><span class="glyphicon glyphicon-book"></span> <a href="fileShare.do" >资源共享</a></li>
-		<li  style="width:90px"><span class="glyphicon glyphicon-search"></span><a href="search.do" >智能搜索</a></li>
-		<li  style="width:90px"><span class="glyphicon glyphicon-zoom-in"></span><a href="higher.do" >高级搜索</a></li>
-		<li  style="width:90px"><span class="glyphicon glyphicon-zoom-in"></span><a href="delFound.do" >文件回收站</a> </li>
-		</ul>
-	    </div>	
 	   
          <br>
 	    &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; <span style="color:#0FCECE;font-size:23px;">资源管理</span>
-	     <span style="color:#0FCECE;font-size:10px;">&nbsp;&nbsp;>></span>
-	     <span id="haoge">我的资源</span>
+	      <span style="color:#0FCECE;font-size:10px;">&nbsp;&nbsp;>></span>
+	      <span id="haoge">我的资源</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		  <span class="glyphicon glyphicon-circle-arrow-up"></span>
+		  <span class="hover" data-target="#newupload" data-toggle="modal" style="cursor: pointer">上传</span>&nbsp;&nbsp;&nbsp;
          <hr style="border-color:black;width:90%;text-align:left;margin-left:100px">
     
     </div>
-
-       <center>
-        <div class="divcss" id="function" align="left" style="border:0">
-
-    <span class="glyphicon glyphicon-circle-arrow-left" id="return"></span>&nbsp;&nbsp;&nbsp;
-        
-        <span class="glyphicon glyphicon-circle-arrow-up"></span>
-
-        <span class="hover" data-target="#newupload" data-toggle="modal">上传</span>&nbsp;&nbsp;&nbsp;
-        
-        <span class="glyphicon glyphicon-plus"></span>
-        <span data-toggle="modal" data-target="#newView" >新建文件夹</span>&nbsp;&nbsp;&nbsp;
-        
-        
+<center>
  <div class="divcss-a" id="view" >
        
          <div id="show">&nbsp;</div> 
@@ -198,56 +209,30 @@
         }
        
         </style>
-    
-    
-    <div id="app" class="none" style="
-    position: fixed;">
-	            <div class="none" id="btn"></div>        
-	    <div id="message" style="height:93%;width:100%;OVERFLOW:auto;overflow-x:auto;overflow-y:auto"><iframe src="mindmap2.html"  scrolling="auto" frameborder="0" style="height:100%;width:100%" ></iframe></div>
-	</div>                          
-    <div class="rightbtn" id="btn2">
-    </div>
-	 <script type="text/javascript">
-	        
-            var oApp = document.getElementById('app');
-            var oBtn = document.getElementById('btn');
-            var oBtn2 = document.getElementById('btn2');
-            oBtn.onclick=function(){
-            	
-                oApp.className="none";
-                oBtn2.className="rightbtn";   
-            }
-            oBtn2.onclick=function(){
-                oApp.className="app";
-                oBtn2.className="none";
-                oBtn.className="leftbtn";
-                link();
-            }
-           
-        </script>
-    <!--侧边栏 结束  -->
-    
+
+
+</center>
   </body>
-   <script src="js/jquery.min2.1.4.js"></script>
+   <script src="/js/jquery.min2.1.4.js"></script>
     <!--  <script src="js/jquery.3.3.1.js"></script> -->
-    <script src="js/jquery.json-2.4.js"></script>
-    <script src="js/json2.js"></script>
-    <script src="pdfjs/build/pdf.js"></script>
-    <script src="pdfjs/build/pdf.worker.js"></script>
-    <script type="text/javascript" src="999/zeroModal.min.js"></script>
-    <script src="mindmap/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.json-2.4.js"></script>
+    <script src="/js/json2.js"></script>
+    <script src="/pdfjs/build/pdf.js"></script>
+    <script src="/pdfjs/build/pdf.worker.js"></script>
+    <script type="text/javascript" src="/999/zeroModal.min.js"></script>
+    <script src="/mindmap/jquery.easyui.min.js" type="text/javascript"></script>
     <!-- <script src="js/jquery.min.js"></script> -->
-    <link rel="stylesheet" type="text/css" href="css/hotai/view.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> 
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/hotai/view.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"> 
-    <link rel="stylesheet" href="css/jquery.contextmenu.css">
-    <link rel="stylesheet" type="text/css" href="css/index/floder.css"  >
-    <link rel="stylesheet" type="text/css" href="css/index/imageShrink.css" >
-    <link rel="stylesheet" type="text/css" href="999/zeroModal.css" >
-    <link rel="stylesheet" type="text/css" href="mindmap/easyui.css">
+    <link rel="stylesheet" href="/css/jquery.contextmenu.css">
+    <link rel="stylesheet" type="text/css" href="/css/index/floder.css"  >
+    <link rel="stylesheet" type="text/css" href="/css/index/imageShrink.css" >
+    <link rel="stylesheet" type="text/css" href="/999/zeroModal.css" >
+    <link rel="stylesheet" type="text/css" href="/mindmap/easyui.css">
     <script type="text/javascript">
    
    //获取客户端ip函数
@@ -319,51 +304,53 @@
              dataType:"json",
              data:data,
              contentType:"application/json",
-             url:"getAllFile.do",
+             url:"/filesInfo/getAllFile",
              success:function(data){
-          	    
-            	 $.each(data,function(i,a){
-            		console.log("路径："+a.filepath);
-            		
-            		    
-                        if(a.filetype=="video"){
-                        	html+="<li class='aaa' style='text-align:center'>";
- 	                        html+="<img src='images/dota2/video.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover'  value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+a.filepath+"\")' >";
- 	                        html+="<div>"+a.filename+"</div>";
- 	                        html+="</li>";
-                        }else if(a.filetype=="picture"){
-                        	
-                        	html+="<li class='aaa' style='text-align:center'>";
- 	                     	html+="<img src='http://"+window.location.host+""+a.filepath+"'  oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' onclick='lookBigImg(this)' >"; 
- 	                     	html+="<div>"+a.filename+"</div>";
- 	                        html+="</li>";
-                        }else if(a.filetype=="other"){
-                        	
-                        	html+="<li class='aaa' style='text-align:center'>";
- 	                        html+="<img src='images/dota2/other.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover ' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"viewer.html?file=https://"+window.location.host+""+a.filepath+"\")' >";
-                        	html+="<div>"+a.filename+"</div>";                                                                                                                                                                        /*  (\"pdf/generic/web/viewer.html?file=http://"+window.location.host+""+a.filepath+"\")' >";    */    
- 	                   		html+="</li>";
-                        }else if(a.filetype=="doc"){
-                        	
-                        	html+="<li class='aaa' style='text-align:center'>";
- 	                        html+="<img src='images/dota2/doc.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+""+a.filepath+"\")' >";
- 	                        html+="<div>"+a.filename+"</div>";
- 	                        html+="</li>";
-                        }else if(a.filetype=="file"){
-                     	   
-                        	html+="<li class='aaa' style='text-align:center'>"; 
- 	                        html+="<img src='images/213125.png' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")'  style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='getAll("+a.files+","+a.f_parentid+")'>";
- 	                        html+="<div>"+a.filename+"</div>";
- 	                        html+="</li>";
-                     	}
-                       
-                  });
+          	    if(data.code == 200){
+          	    	var files = data.data;
+					$.each(files,function(i,a){
+						console.log("路径："+a.filePath);
+
+						if(a.fileType=="video"){
+							html+="<li class='aaa' style='text-align:center'>";
+							html+="<img src='/images/dota2/video.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover'  value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+a.filepath+"\")' >";
+							html+="<div>"+a.fileName+"</div>";
+							html+="</li>";
+						}else if(a.fileType=="picture"){
+
+							html+="<li class='aaa' style='text-align:center'>";
+							html+="<img src='http://"+window.location.host+""+a.filePath+"'  oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' onclick='lookBigImg(this)' >";
+							html+="<div>"+a.fileName+"</div>";
+							html+="</li>";
+						}else if(a.fileType=="other"){
+
+							html+="<li class='aaa' style='text-align:center'>";
+							html+="<img src='/images/dota2/other.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover ' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"viewer.html?file=https://"+window.location.host+""+a.filepath+"\")' >";
+							html+="<div>"+a.fileName+"</div>";                                                                                                                                                                        /*  (\"pdf/generic/web/viewer.html?file=http://"+window.location.host+""+a.filepath+"\")' >";    */
+							html+="</li>";
+						}else if(a.fileType=="doc"){
+
+							html+="<li class='aaa' style='text-align:center'>";
+							html+="<img src='/images/dota2/doc.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+""+a.filepath+"\")' >";
+							html+="<div>"+a.fileName+"</div>";
+							html+="</li>";
+						}else if(a.fileType=="file"){
+
+							html+="<li class='aaa' style='text-align:center'>";
+							html+="<img src='images/213125.png' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")'  style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='getAll("+a.files+","+a.f_parentid+")'>";
+							html+="<div>"+a.fileName+"</div>";
+							html+="</li>";
+						}
+
+					});
+
+				} else {
+          	    	alert(data.msg);
+				}
              
                $("#divall").html(html);
-            	 
              	 /*    $("#divall").append(html);   */
-                
-              
+
                },
            });
     	 
@@ -401,30 +388,7 @@
              
          });
      }
-     </script> 
-     
- 
-    
-    
-    <!-- //返回上级的方法,用document存值，在整个页面上取（看表） -->
-   <script type="text/javascript">
-    
-    $(function(){
-    	
-    	$("#return").click(function(){
-    		
-    	var cn=document.getElementById('view').value;
-        if(cn==null){
-        	getAll(0);
-        }else{
-           getAll(cn);
-        }
-  	
-    	});
- 	
-    });
-   
-    </script> 
+     </script>
     
    
    <!-- 点击刷新局部页面后面的四个页面 -->
@@ -541,12 +505,7 @@
 			 $("#mm").css({
 				"left": e.pageX,
 				"top": e.pageY
-			}).show(); 
-			/* $('#mm').menu('show', { //菜单EasyUI
-				left : e.pageX,
-				top : e.pageY,
-				hideOnUnhover : false
-			}); */
+			}).show();
 		});
      }
     
@@ -555,11 +514,6 @@
   
   <!-- 右键菜单中的函数  -->
   <script type="text/javascript">
-  
-  
-	  function pp(){
-		   alert("一个坑");
-	  }
   
        <!-- 删除文件 -->
        function delFile(){
@@ -593,136 +547,10 @@
 	    		 
 	      	 });   
        }
-     
-  
 
-       
-       <!-- 新建文件夹 -->
-       function newFile(){
-    	 $('#newView').modal('toggle');
-       }
-  
-       
-       
-       
-       <!-- 共享文件 -->
-       function  shareFile(){
-    	  
-    	   var adata={"f_id":document.getElementById('o').value,
-	    		      "nodeid":document.getElementById('f').value
-	                 };
-     	   var data=JSON.stringify(adata); 
-    	   
-	     	   $.ajax({
-		      	  type:"POST",
-	      		  contentType:"application/json",
-	      		  dataType:"json",
-	      		  url:"saveShareFile.do",
-	      		  data:data,
-		      		 
-		      		 success:function(data){
-		      			 
-		      			 if(data.a=="1"){
-		      				 alert("共享成功");
-		      				 getAll(0,0);
-		      			 }else if(data.a=="3"){
-		      				 alert("已共享过该文件");
-		      				 getAll(0,0);
-		      			 }else{
-		      				 alert("共享成功");
-		      				 getAll(0,0);
-		      			 }
-		      		 },
-		      		 
-		      		 error:function(e){
-		      			 alert("连接失败");
-		      			 getAll(0,0);
-		      		 }
-		    		 
-		      	 }); 
-       }
-       
-       
-
-       
-       <!-- 收藏文件 -->
-       function  collectionFile(){
-	   	   var adata={"f_id":document.getElementById('o').value,
-	    	          "nodeid":document.getElementById('f').value	   
-	                  };
-	       var data=JSON.stringify(adata);  
-    
-            $.ajax({
-         	    type:"POST",
-         	    dataType:"json",
-         	    contentType:"application/josn",
-         	    data:data,
-         	    url:"saveCollectionFile.do",
-         	 
-	         	 success:function(data){
-	         		 
-	         		 if(data.a=="1"){
-	         			 alert("收藏成功");
-	         			 getAll(0,0);
-	         		 }else if(data.a=="3"){
-	         			 alert("已收藏过该文件");
-	         			 getAll(0,0);
-	         		 }else{
-	         			 alert("收藏失败");
-	         		 }
-	         	 },
-	         	 
-	         	 error:function(e){
-	         		 alert("连接失败");
-	         	 },	 
-	          }); 
-    	   
-       } 
-       
   </script>
   
   
-  <!-- AJAX上传文件 -->
-  <script type="text/javascript">
-  
-	  function upload(){
-		 
-		  var formData = new FormData();
-	  	  var name = $("#wenjian").val();
-	  	console.log("name:"+name);
-	  	  formData.append("wenjian",$("#wenjian")[0].files[0]);
-	  	  formData.append("upload_parentid",$("#upload_hide").val());
-	  	  console.log(formData);
-	      $.ajax({
-	          url: '/uploadallfile.do',  
-	          type: 'post',
-	          data : formData, 
-	          processData : false, 
-	          contentType : false,
-	        
-	          success: function (data) {
-	          	var json = $.parseJSON(data);
-	                  if(json.a == "1"){
-	                  	  getAll(0,0);  //上传成功
-	                  } else if(json.a == "2"){
-	                	  alert("用户登录错误");
-	                	  getAll(0,0);
-	                  } else if(json.a == "3"){
-	                	  alert("已上传过该文件");
-	                	  getAll(0,0);
-	                  }
-	          },
-	          error: function (data, status, e) { ////修改
-	              alert("服务器向你抛了个异常");
-	              /* alert("data是"+data);
-	              alert("status是"+status);
-	              alert("e是"+e); */
-	              getAll(0,0);
-	          } 
-	      }); 
-		  
-	  }
-  
-  </script>
+
   
 </html>
