@@ -579,9 +579,9 @@ h4{
 					for(var i = 0; i < mapList.length; i++){
 						html+="<tr><td>"+mapList[i].rootName+"</td>";
 						html+="<td>"+mapList[i].userName+"</td>";
-						html+="<td><span class='link-style' onclick='open_ajax3("+mapList[i].mapId+");'>"+"查看图谱"+"</span></td>";
-						html+="<td><span class='link-style' data-target='#nodeGrade' data-toggle='modal' onclick='getMapGrade("+mapList[i].mapId+")'>"+"综合评分"+"</span></td>";
-						html+="<td><span class='link-style' data-toggle='modal' data-target='#myModal' onclick='value("+mapList[i].mapId+")'>打分</span></td>";
+						html+="<td><span class='link-style' style='cursor: pointer' onclick='open_ajax3("+mapList[i].mapId+");'>"+"查看图谱"+"</span></td>";
+						html+="<td><span class='link-style' style='cursor: pointer' data-target='#nodeGrade' data-toggle='modal' onclick='getMapGrade("+mapList[i].mapId+")'>"+"综合评分"+"</span></td>";
+						html+="<td><span class='link-style' style='cursor: pointer' data-toggle='modal' data-target='#myModal' onclick='value("+mapList[i].mapId+")'>打分</span></td>";
 						html+="</tr>";
 					}
 
