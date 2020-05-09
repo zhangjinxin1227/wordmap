@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <!--<link rel="stylesheet" href="/css/index/style.css">-->
+    <script type="text/javascript" src="/js/jquery.min2.1.4.js" ></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js" ></script>
+    <link rel="stylesheet" type="text/css" href="/mindmap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/mindmap/icon.css">
+    <link rel="stylesheet" type="text/css" href="/999/zeroModal.css" >
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/ifont/css/font-awesome.min.css" />
+    <!--<link rel="stylesheet" type="text/css" href="/mindmap/style.css" />-->
+    <link rel="stylesheet" type="text/css" href="/mindmap/noJS.css" />
+</head>
+<script>
+    $(function(){
+        clearViewCss();
+    });
+
+    /* 清除边框样式 */
+    function clearViewCss() {
+        $("#view").css("box-shadow","none");
+    }
+
+</script>
+<style>
+    #tp{
+        background: #f3f3f3 !important;  /* 固定导航栏样式 */
+    }
+    .btn-primary{
+        width: 81px;
+        height: 36px;
+        margin-top:-10px;
+    }
+    .btn-primary:hover{
+        width: 81px;
+        height: 36px;
+        margin-top:-10px;
+    }
+    .top{
+        background: rgb(255, 252, 252);
+    }
+    .main-container:after,.top{
+        background: -webkit-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
+        background: -o-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
+        background: -moz-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
+        background: -ms-linear-gradient(left, rgba(218, 189, 211, 0.72), #DAB69D, #B4CCC2, #91CCB6);
+    }
+
+    body{
+        text-align: center;
+    }
+
+    #aaa{
+        height: 100%;
+        width: 60%;
+        position: absolute;
+        /*top: 65px;*/
+        left: 310px;
+        background-color: #eee;
+    }
+
+    #bbb{
+        width: 100%;
+        height: 30%;
+        border:1px solid #d3d0d0;
+    }
+
+    #ccc{
+        width: 100%;
+        height: 70%;
+        border:1px solid #d3d0d0;
+    }
+
+    #ddd{
+        float: left;
+        height: 100%;
+        width: 30%;
+        border-bottom-left-radius:1px solid #d3d0d0;
+    }
+
+    #eee{
+        float: right;
+        height: 100%;
+        width: 70%;
+        border-left:1px solid #d3d0d0;
+    }
+
+    #account{
+        text-align: center;
+        font-weight: 600;
+        color: #d3d0d0;
+        height: 70%;
+        width: 100%;
+    }
+
+    #mapNumber{
+        text-align: center;
+        font-weight: 200;
+        color: #31B0D5;
+        height: 30%;
+        width: 100%;
+    }
+
+    hr{
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 0;
+        border-top: 1px solid #eee;
+    }
+
+    #userInfo{
+        border-bottom:1px solid #d3d0d0;
+    }
+
+    input{
+        background: #ccc;
+        border: 1px solid #eee;
+        border-radius: 5px;
+    }
+
+    button {
+        background-color: #008CBA;
+        border: none;
+        color: white;
+        padding: 10px 18px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 9px;
+        margin: 1px 2px;
+        cursor: pointer;
+        border-radius: 2px;
+    }
+</style>
+<body>
+
+<div class="main-container">
+</div>
+
+    <div class="show" style="width: 100%;height: 720px;text-align: center;z-index: -1;">
+        <div id="aaa">
+            <div id="bbb">
+                <div id="ddd">
+                    <div id="account">
+                        <p>&nbsp;</p>
+                        <p style="height: 70%;"><img src="/images/tomCluth.jpg" style="width: 35%;height: 90%;border-radius:50%"></p>
+                        <p>用户：jinxin</p>
+                    </div>
+                    <div id="mapNumber">
+                        <hr />
+                        <p>共有61个思维导图</p>
+                    </div>
+                </div>
+                <div id="eee">
+                    <div class="gradeNumber" style="float: left;width: 50%;height: 50%;">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <span style="color:#269ABC;">总的积分数：50</span>
+                    </div>
+                    <div class="gradeNumber" style="float: right;width: 50%;height: 50%;">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="gradeNumber" style="float: left;width: 50%;height: 50%;">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <span style="color:#269ABC;">剩余积分数：30</span>
+                    </div>
+                    <div class="gradeNumber" style="float: right;width: 50%;height: 50%;">
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <span style="color:#D58512;">消费积分数：20</span>
+                    </div>
+                </div>
+
+            </div>
+            <div id="ccc">
+                <div id="userInfo" style="width: 100%;height: 40%;">
+                    <div style="float: left;width: 50%;height: 40%;">
+                        <p>&nbsp;</p>
+                        <span style="color:#269ABC;">姓名：<input type="text" id="userName" value="张金鑫"></span>
+                    </div>
+                    <div  style="float: right;width: 50%;height: 40%;">
+                        <p>&nbsp;</p>
+                        <span style="color:#269ABC;">电话：<input type="tel" id="phone" value="13784858380"></span>
+                    </div>
+                    <div  style="float: left;width: 50%;height: 40%;">
+                        <p>&nbsp;</p>
+                        <span style="color:#269ABC;">邮箱：<input type="email" id="email" value="813849656@qq.com"></span>
+                    </div>
+                    <div  style="float: right;width: 50%;height: 40%;">
+                        <p>&nbsp;</p>
+                        <span style="color:#269ABC;">籍贯：<input id="city" type="text" name="city" class="city"  list="itemlist" placeholder="选择地址" autocomplete="off" />
+							<datalist id="itemlist">
+							</datalist>
+					</span>
+                    </div>
+                    <div style="width: 100%;height: 20%;">
+                        <button onclick="updateUserInfo()">修改并提交</button>
+                    </div>
+                </div>
+                <div id="jifenjilu" style="width: 100%;height: 70%;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
