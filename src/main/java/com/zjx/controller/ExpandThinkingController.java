@@ -93,8 +93,8 @@ public class ExpandThinkingController {
      */
     @RequestMapping(value = "/getMapGrade" ,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public MindMap getMapGrade(@RequestBody String rootId){
-        return expandThinkingService.getMapGrade(rootId);
+    public MindMap getMapGrade(@RequestBody Map<String, String> map){
+        return expandThinkingService.getMapGrade(map.get("rootId"));
     }
 
 

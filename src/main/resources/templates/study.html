@@ -281,6 +281,39 @@ h4{
 	padding-left: 16px;
 	border: 1px solid #e5e5e5;
 }
+
+	/*查看综合分数模态框*/
+.c-right-grade{
+	width:100%;
+	height:165px;
+	border: 1px solid #fff;
+	background-color: #fff;
+}
+
+.one-grade {
+	width: 10%;
+	height: 40px;
+	margin-top: 5px;
+	margin-left: 35px;
+	border-radius: 5px;
+	color: #999;
+	line-height: 40px;
+	padding-left: 16px;
+	border: 1px solid #e5e5e5;
+}
+
+.rootGrade{
+	color: #269ABC;
+}
+
+#integralGrade{
+	position: absolute;
+	left: 86px;
+}
+
+#integral{
+	width: 56px;
+}
 </style>
 </head>
 <body background="#fff">
@@ -346,6 +379,51 @@ h4{
 					</button>
 					<button type="button" class="btn btn-primary" onclick="mark()">
 						提交打分
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!--查看综合分数模态框-->
+	<div class="modal fade" id="nodeGrade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						思维导图综合分数
+					</h4>
+				</div>
+
+				<div class="modal-body">
+					<div id="div2" class="div2 Absolute-Center">
+						<div class="c-right-grade">
+							<div class="middle">
+								<center>
+									<p>
+										<span class="rootGrade">知识逻辑性总分:<input type="text" id="nodeLogic1" class="one-grade"  readonly  unselectable="on" ></span>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<span class="rootGrade">知识完整度总分:<input type="text" id="nodeTotal1" class="one-grade"  readonly  unselectable="on"></span>
+									</p>
+									<p>
+										<span class="rootGrade">导图美观度总分:<input type="text" id="nodeArtistic1" class="one-grade"  readonly  unselectable="on"></span>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<span class="rootGrade">导图记忆性总分:<input type="text" id="nodeMemory1" class="one-grade"  readonly  unselectable="on"></span>
+									</p>
+									<span class="rootGrade" id="integralGrade">思维导图总分&nbsp;&nbsp;&nbsp;:<input type="text" id="integral" class="one-grade" readonly  unselectable="on">
+							</span>
+								</center>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 					</button>
 				</div>
 			</div>
@@ -502,7 +580,7 @@ h4{
 						html+="<tr><td>"+mapList[i].rootName+"</td>";
 						html+="<td>"+mapList[i].userName+"</td>";
 						html+="<td><span class='link-style' onclick='open_ajax3("+mapList[i].mapId+");'>"+"查看图谱"+"</span></td>";
-						html+="<td><span class='link-style' onclick='getMapGrade("+mapList[i].mapId+");'>"+"综合评分"+"</span></td>";
+						html+="<td><span class='link-style' data-target='#nodeGrade' data-toggle='modal' onclick='getMapGrade("+mapList[i].mapId+")'>"+"综合评分"+"</span></td>";
 						html+="<td><span class='link-style' data-toggle='modal' data-target='#myModal' onclick='value("+mapList[i].mapId+")'>打分</span></td>";
 						html+="</tr>";
 					}
@@ -591,13 +669,12 @@ h4{
 			contentType:"application/json",
 			data : data,
 			success : function(data) {
-				if(data.length > 0){
-					for(var i = 0; i < data.length; i++){
-
-					}
-				} else {
-					//显示暂无评论
-				}
+				console.log("data返回的是："+data);
+				$("#nodeLogic1").val(data.logicGrade);
+				$("#nodeTotal1").val(data.totalGrade);
+				$("#nodeArtistic1").val(data.artisticGrade);
+				$("#nodeMemory1").val(data.memoryGrade);
+				$("#integral").val(data.integral);
 			},
 		});
 	}
