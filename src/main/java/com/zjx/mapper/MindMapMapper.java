@@ -39,4 +39,6 @@ public interface MindMapMapper {
     List<MindMap> getMapGradeList();
 
     void updateGrade(MindMap mindMap);
+
+    Integer getMapNumber(Integer userId);
 }

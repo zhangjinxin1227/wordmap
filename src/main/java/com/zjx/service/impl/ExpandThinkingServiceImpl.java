@@ -68,4 +68,14 @@ public class ExpandThinkingServiceImpl implements ExpandThinkingService {
     public Integer insertMark(ScoringRecord scoringRecord){
         return scoringRecordMapper.insertMark(scoringRecord);
     }
+
+    /**
+     * 获得用户的评分记录
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<ScoringRecord> getUserScoringRecord(String userId){
+        return scoringRecordMapper.getUserScoringRecord(Integer.parseInt(userId));
+    }
 }

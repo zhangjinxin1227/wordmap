@@ -17,7 +17,10 @@
 </head>
 <script>
     $(function(){
+        getCity();
+        getUserInfo();
         clearViewCss();
+        mapGradeHistory();
     });
 
     /* 清除边框样式 */
@@ -25,8 +28,99 @@
         $("#view").css("box-shadow","none");
     }
 
+    /*获得城市信息方法*/
+    function getCity() {
+        var html = "";
+        $.ajax({
+            type:"POST",
+            contentType:"application/json",
+            dataType:"json",
+            url:"/login/getCityInfo",
+
+            success:function(data){
+                for(var i = 0; i < data.length; i++){
+                    html += "<option class = '"+data[i].cityId+"'>"+data[i].cityName+"</option>";
+                }
+                $("#itemlist").html(html);
+            },
+            error:function(e){
+                alert("连接显示知识点失败");
+            },
+
+        });
+
+    }
+
+    /*获得用户信息的方法*/
+    function getUserInfo() {
+        var html = "";
+        $.ajax({
+            type:"POST",
+            contentType:"application/json",
+            dataType:"json",
+            url:"/perpleInfo/getUserInfo",
+            success:function(data){
+                document.getElementById('userAccount').innerHTML = "用户："+data.account;
+                document.getElementById('mapNumbers').innerHTML = "共创思维导图："+data.mapNumber+"个";
+                document.getElementById('tokenGet').innerHTML = "总积分数："+data.tokenGet;
+                document.getElementById('tokenResidue').innerHTML = "剩余积分数："+data.tokenResidue;
+                document.getElementById('tokenCunsume').innerHTML = "消费积分数："+data.tokenCunsume;
+                //$("#userAccount").val("用户："+data.account);
+                //$("#mapNumbers").val("共创思维导图："+data.mapNumber+"个");
+                //$("#tokenGet").val("总积分数："+data.tokenGet);
+                //$("#tokenResidue").val("剩余积分数："+data.tokenResidue);
+                //$("#tokenCunsume").val("消费积分数："+data.tokenCunsume);
+                $("#userName").val(data.name);
+                $("#phone").val(data.phone);
+                $("#email").val(data.email);
+            },
+            error:function(e){
+                alert("连接显示知识点失败");
+            },
+        });
+    }
+    
+    function mapGradeHistory() {
+        var html = "";
+        $.ajax({
+            type:"POST",
+            contentType:"application/json",
+            dataType:"json",
+            url:"/perpleInfo/mapGradeHistory",
+            success:function(data){
+                html+="<table class='table table-hover'>";
+                html+="<thead><tr><th class='biaoti'>图谱名称</th><th class='biaoti'>导图逻辑分</th><th class='biaoti'>知识全面分</th><th class='biaoti'>导图美观分</th><th class='biaoti'>导图记忆分</th><th class='biaoti'>评分时间</th></tr></thead>";
+                html+="<tbody>";
+                for(var i = 0; i < data.length; i++){
+                    html+="<tr><td>"+data[i].mapName+"</td>";
+                    html+="<td>"+data[i].nodeLogic+"</td>";
+                    html+="<td>"+data[i].nodeTotal+"</td>";
+                    html+="<td>"+data[i].nodeArtistic+"</td>";
+                    html+="<td>"+data[i].nodeMemory+"</td>";
+                    html+="<td>"+data[i].createTime+"</td>";
+                    html+="</tr>";
+                }
+                html+="</tbody></table>";
+                $("#mapGradeHistory").html(html);
+            },
+            error:function(e){
+                alert("连接显示知识点失败");
+            },
+
+        });
+    }
+
 </script>
 <style>
+    .biaoti{
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.23);
+    }
+    .table-hover > tbody > tr:hover {
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.23);
+    }
+
     #tp{
         background: #f3f3f3 !important;  /* 固定导航栏样式 */
     }
@@ -148,18 +242,18 @@
                     <div id="account">
                         <p>&nbsp;</p>
                         <p style="height: 70%;"><img src="/images/tomCluth.jpg" style="width: 35%;height: 90%;border-radius:50%"></p>
-                        <p>用户：jinxin</p>
+                        <p id="userAccount"></p>
                     </div>
                     <div id="mapNumber">
                         <hr />
-                        <p>共有61个思维导图</p>
+                        <p id="mapNumbers"></p>
                     </div>
                 </div>
                 <div id="eee">
                     <div class="gradeNumber" style="float: left;width: 50%;height: 50%;">
                         <p>&nbsp;</p>
                         <p>&nbsp;</p>
-                        <span style="color:#269ABC;">总的积分数：50</span>
+                        <span id="tokenGet" style="color:#269ABC;"></span>
                     </div>
                     <div class="gradeNumber" style="float: right;width: 50%;height: 50%;">
                         <p>&nbsp;</p>
@@ -168,12 +262,12 @@
                     <div class="gradeNumber" style="float: left;width: 50%;height: 50%;">
                         <p>&nbsp;</p>
                         <p>&nbsp;</p>
-                        <span style="color:#269ABC;">剩余积分数：30</span>
+                        <span id="tokenResidue" value="" style="color:#269ABC;"></span>
                     </div>
                     <div class="gradeNumber" style="float: right;width: 50%;height: 50%;">
                         <p>&nbsp;</p>
                         <p>&nbsp;</p>
-                        <span style="color:#D58512;">消费积分数：20</span>
+                        <span id="tokenCunsume" style="color:#D58512;"></span>
                     </div>
                 </div>
 
@@ -182,15 +276,15 @@
                 <div id="userInfo" style="width: 100%;height: 40%;">
                     <div style="float: left;width: 50%;height: 40%;">
                         <p>&nbsp;</p>
-                        <span style="color:#269ABC;">姓名：<input type="text" id="userName" value="张金鑫"></span>
+                        <span style="color:#269ABC;">姓名：<input type="text" id="userName" value=""></span>
                     </div>
                     <div  style="float: right;width: 50%;height: 40%;">
                         <p>&nbsp;</p>
-                        <span style="color:#269ABC;">电话：<input type="tel" id="phone" value="13784858380"></span>
+                        <span style="color:#269ABC;">电话：<input type="tel" id="phone" value=""></span>
                     </div>
                     <div  style="float: left;width: 50%;height: 40%;">
                         <p>&nbsp;</p>
-                        <span style="color:#269ABC;">邮箱：<input type="email" id="email" value="813849656@qq.com"></span>
+                        <span style="color:#269ABC;">邮箱：<input type="email" id="email" value=""></span>
                     </div>
                     <div  style="float: right;width: 50%;height: 40%;">
                         <p>&nbsp;</p>
@@ -203,7 +297,7 @@
                         <button onclick="updateUserInfo()">修改并提交</button>
                     </div>
                 </div>
-                <div id="jifenjilu" style="width: 100%;height: 70%;">
+                <div id="mapGradeHistory" style="width: 100%;height: 70%;">
 
                 </div>
             </div>

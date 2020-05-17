@@ -23,4 +23,6 @@ public interface UserBeamMapper {
 
     Integer getCityName(@Param("cityName")String cityName);
 
+    UserBean getUserMsg(@Param("userId") Integer userId);
+
 }

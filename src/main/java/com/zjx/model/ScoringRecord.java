@@ -18,6 +18,8 @@ public class ScoringRecord implements Serializable {
 
     private Integer userId;//用户编号
 
+    private String mapName;//思维导图名称
+
     private String userAccount;//用户昵称
 
     private Integer nodeLogic;//逻辑性分数

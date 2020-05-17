@@ -35,4 +35,6 @@ public interface MindMapService {
     void newMapToken(Integer userId);
 
     void mapSystemRating();//系统思维导图自动评分定时任务
+
+    Integer getMapNumber(String userId);
 }

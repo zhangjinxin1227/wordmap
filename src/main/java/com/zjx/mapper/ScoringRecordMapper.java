@@ -14,4 +14,6 @@ public interface ScoringRecordMapper {
     ScoringRecord getScoringRecord(@Param("rootId") String rootId, @Param("weekFirstDate")String weekFirstDate, @Param("weekLastDate")String weekLastDate);
 
     Integer insertMark(ScoringRecord scoringRecord);
+
+    List<ScoringRecord> getUserScoringRecord(@Param("userId") Integer userId);
 }

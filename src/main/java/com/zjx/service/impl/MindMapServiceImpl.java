@@ -332,6 +332,18 @@ public class MindMapServiceImpl implements MindMapService {
         tokenMapper.newMapToken(token);
     }
 
+
+    /**
+     * 获得用户思维导图的数量
+     * @param userId
+     * @return
+     */
+    @Override
+    public Integer getMapNumber(String userId){
+        return mindMapMapper.getMapNumber(Integer.parseInt(userId));
+    }
+
+
     /**
      * //系统思维导图自动评分定时任务
      */
@@ -368,4 +380,6 @@ public class MindMapServiceImpl implements MindMapService {
 
         }
     }
+
+
 }

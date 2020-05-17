@@ -104,4 +104,27 @@
       NOW()
     </trim>
   </insert>
+
+  <select id="getUserScoringRecord" resultType="com.zjx.model.ScoringRecord">
+    SELECT
+    m.node_name as mapName,
+    u.account as userAccount,
+    s.node_logic as nodeLogic,
+    s.node_artistic as nodeArtistic,
+    s.node_memory as nodeMemory,
+    s.node_total as nodeTotal,
+    s.create_time as createTime
+    FROM
+    scoring_record s , um_t_user u, mind_map m
+    WHERE
+    s.user_id = #{userId}
+    AND
+    m.map_id = s.map_id
+    AND
+    s.user_id = u.id
+    AND
+    u.is_del = 0
+    AND
+    m.is_del = 0
+  </select>
 </mapper>

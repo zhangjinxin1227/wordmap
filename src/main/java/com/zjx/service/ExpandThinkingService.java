@@ -15,4 +15,6 @@ public interface ExpandThinkingService {
     List<MindMap> getSearchMindByName(String searchMessage);
 
     Integer insertMark(ScoringRecord scoringRecord);
+
+    List<ScoringRecord> getUserScoringRecord(String userId);
 }

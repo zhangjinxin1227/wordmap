@@ -129,78 +129,18 @@
     WHERE
     c.city_name = #{cityName}
   </select>
-</mapper>
-  <!--<insert id="insert" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
-    insert into block_chain (id, block_number, node_number, 
-      grant_token_number, consum_token_number)
-    values (#{id,jdbcType=INTEGER}, #{blockNumber,jdbcType=INTEGER}, #{nodeNumber,jdbcType=INTEGER}, 
-      #{grantTokenNumber,jdbcType=INTEGER}, #{consumTokenNumber,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
-    insert into block_chain
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="blockNumber != null" >
-        block_number,
-      </if>
-      <if test="nodeNumber != null" >
-        node_number,
-      </if>
-      <if test="grantTokenNumber != null" >
-        grant_token_number,
-      </if>
-      <if test="consumTokenNumber != null" >
-        consum_token_number,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="blockNumber != null" >
-        #{blockNumber,jdbcType=INTEGER},
-      </if>
-      <if test="nodeNumber != null" >
-        #{nodeNumber,jdbcType=INTEGER},
-      </if>
-      <if test="grantTokenNumber != null" >
-        #{grantTokenNumber,jdbcType=INTEGER},
-      </if>
-      <if test="consumTokenNumber != null" >
-        #{consumTokenNumber,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
-    update block_chain
-    <set >
-      <if test="blockNumber != null" >
-        block_number = #{blockNumber,jdbcType=INTEGER},
-      </if>
-      <if test="nodeNumber != null" >
-        node_number = #{nodeNumber,jdbcType=INTEGER},
-      </if>
-      <if test="grantTokenNumber != null" >
-        grant_token_number = #{grantTokenNumber,jdbcType=INTEGER},
-      </if>
-      <if test="consumTokenNumber != null" >
-        consum_token_number = #{consumTokenNumber,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.unionman.springbootsecurityauth2.model.BlockChain" >
-    update block_chain
-    set block_number = #{blockNumber,jdbcType=INTEGER},
-      node_number = #{nodeNumber,jdbcType=INTEGER},
-      grant_token_number = #{grantTokenNumber,jdbcType=INTEGER},
-      consum_token_number = #{consumTokenNumber,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <select id="getAllBlockChain" resultMap="BaseResultMap" >
+
+  <select id="getUserMsg" resultType="com.zjx.model.UserBean">
     select
-    <include refid="Base_Column_List" />
-    from block_chain
-  </select>-->
+    account,
+    password,
+    name as name,
+    email,
+    phone,
+    city as cityId
+    from um_t_user
+    where
+    id = #{userId}
+    and is_del = 0
+  </select>
+</mapper>

@@ -292,4 +292,19 @@
     and
     m.is_del = 0
   </update>
+
+  <select id="getMapNumber" resultType="java.lang.Integer">
+SELECT
+count(*)
+FROM
+mind_map p, um_t_user u
+WHERE
+p.user_id = 2
+AND
+p.user_id = u.id
+AND
+u.is_del = 0
+AND
+p.is_del = 0
+  </select>
 </mapper>
