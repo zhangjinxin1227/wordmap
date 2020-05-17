@@ -72,28 +72,27 @@ public class LoginController {
 		   String resultVerifyCode = request.getSession().getAttribute("verifyCode").toString();//获取缓存生成的验证码
 		//判断验证码是否正确，不正确的话返回一个错误的状态
 		   if (!checkValidateCode(verifyImage, resultVerifyCode)) {
-			  return returnStatus.verifyCodeError;
+			  return "verifyCodeError";
 		    }
 		}
 
 		//判断登录信息(具体表现为是学生，管理员，用户名错误，密码错误)
-		int isValidUser = loginService.loginCheck2(username, password);
-		if (isValidUser == 1){
-			
+		//int isValidUser = loginService.loginCheck2(username, password);
+		UserBean userBean = loginService.loginCheck2(username, password);
+		/*if (isValidUser == 1){*/
+		if (userBean != null){
 			HttpSession session2 = request.getSession();
 			//在这里设置持续登录的时间
-			session2.setAttribute("username", username);
+			session2.setAttribute("userName", userBean.getName());
+			session2.setAttribute("userId", userBean.getId());
+			session2.setAttribute("account", userBean.getAccount());
 			session2.setMaxInactiveInterval(6*60*60);
-			
-			//验证成功后将会把返回的Authentication对象存放在SecurityContext
-			/*UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-			Authentication authentication = authenticationManager.authenticate(authRequest); //调用loadUserByUsername
-			SecurityContextHolder.getContext().setAuthentication(authentication);*/
+
 
 			//根据状态值返回
-			return returnStatus.student;//学生端
+			return "student";//学生端
 		}else {
-			return this.returnStatus.NotHaveUser;
+			return "NotHaveUser";
 		}
 
 	}
@@ -106,13 +105,13 @@ public class LoginController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/iflogin")
+	@RequestMapping(value="/iflogin",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public String iflogin(HttpServletRequest request) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		HttpSession session = request.getSession();
-		Object nickname = session.getAttribute("username");
-		map.put("nickname", "jinxin");
+		Object nickname = session.getAttribute("account");
+		map.put("nickname", nickname);
 		map.put("status", Integer.valueOf(1));
 		return this.jsonAnalyze.map2Json(map);
 	}

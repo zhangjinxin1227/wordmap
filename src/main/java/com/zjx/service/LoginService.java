@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LoginService {
 
-    Integer loginCheck2(String userName, String password);
+    UserBean loginCheck2(String userName, String password);
 
     UserBean getUserByNickname(String name);
 

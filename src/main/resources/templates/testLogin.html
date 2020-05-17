@@ -49,25 +49,26 @@
                     data:data,
                     url:"/login/loginCheck2",
                     success:function(data) {
-     
-                        if (data.Status == "NotHaveUser" || data.Status == "PasswordError") {
+     					console.log("data是："+data);
+                        if (data == "NotHaveUser" || data == "PasswordError") {
                             alert("用户名或密码填写不正确");
                             $(".verifyImage").attr("src", "getVerifyCode.do");
-                        } else if (data.Status == "verifyCodeError") {
+                        } else if (data == "verifyCodeError") {
                             alert("验证码不正确");
                             $(".verifyImage").attr("src", "getVerifyCode.do");
-                        }else if(data.Status=="RoleError"){
+                        }else if(data =="RoleError"){
                        		alert("角色不正确");
                        		$("#verifyImage").attr("src","getVerifyCode.do");
-                       } else if (data.Status == "student") {
-                           location.href = "index.do";
-                       }else if (data.Status == "teacher"||data.Status == "admin") {
-                           location.href = "main.do";
-                       }
+                       } else if (data == "student") {
+							console.log("到达这里啦");
+                           location.href = "/index/index.do";
+                       }else {
+							console.log("都不对呀");
+							$("#verifyImage").attr("src","getVerifyCode.do");
+						}
                     },
                     error:function(e){
                         alert("网络连接失败");
-
                     }
                 });
         	

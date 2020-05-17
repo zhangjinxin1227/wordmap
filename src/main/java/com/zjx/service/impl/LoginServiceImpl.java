@@ -16,14 +16,15 @@ public class LoginServiceImpl implements LoginService {
     private UserBeamMapper userBeamMapper;
 
     @Override
-    public Integer loginCheck2(String userName, String password){
-        int b = 0;
+    public UserBean loginCheck2(String userName, String password){
+        //int b = 0;
         UserBean user = userBeamMapper.getUserInfo(userName, password);
-        if (user == null) {
+        /*if (user == null) {
             return b = 0; // 密码错误
         } else {
             return b = 1;   //学生端
-        }
+        }*/
+        return  user;
     }
 
     @Override

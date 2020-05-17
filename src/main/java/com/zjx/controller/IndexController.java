@@ -5,6 +5,7 @@ import cn.apiclub.captcha.backgrounds.TransparentBackgroundProducer;
 import cn.apiclub.captcha.servlet.CaptchaServletUtil;
 import cn.apiclub.captcha.text.renderer.DefaultWordRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,13 +32,8 @@ public class IndexController {
 	 * 用来映射首页面
 	 * @return
 	 */
-	@RequestMapping(value={"/","index.do"})
+	@RequestMapping(value={"/","index.do"},produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String index(HttpServletRequest request){
-		//咱是先把用户信息放入session
-		HttpSession session = request.getSession();
-		session.setAttribute("userId","2");
-		session.setAttribute("account","jinxin");
-		session.setAttribute("userName","张金鑫");
 		return "index";
 	}
 
