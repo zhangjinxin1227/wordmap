@@ -111,7 +111,8 @@ public class FilesController {
                 in = files[i].getInputStream();
                 byte[] buffer = new byte[1024];
                 int len = 0;
-                String path=pathUrl+File.separator+year+File.separator+month+File.separator+fileName;
+                String path = pathUrl+File.separator+year+File.separator+month+File.separator+fileName;//写入文件的路径
+                String pathTranscript = "\\getFiles" + File.separator+year + File.separator+month + File.separator+fileName;//文件路径副本 即：存入数据库的路径，用于前端展示
 
                 File file = new File(path);
                 if(!file.getParentFile().exists()){
@@ -168,7 +169,7 @@ public class FilesController {
                 UploadFile uploadFile = new UploadFile();
                 uploadFile.setUserId(Integer.parseInt(userId));
                 uploadFile.setFileName(preFix1);
-                uploadFile.setFilePath(path);
+                uploadFile.setFilePath(pathTranscript);
                 uploadFile.setFileType(preFix2);
                 uploadFile.setTubiao(tubiao);
                 fileService.insertNodeFile(uploadFile);
