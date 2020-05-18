@@ -8,7 +8,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("/upload/**").addResourceLocations("file:C:\\upload\\");
-        super.addResourceHandlers(registry);
+        registry.addResourceHandler("/getFiles/**").addResourceLocations("file:D:\\mindMapFile\\");
     }
 }
