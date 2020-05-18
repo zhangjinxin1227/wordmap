@@ -42,14 +42,12 @@
                     "verifyImage":$("#verifyCode").val(),
                 };
                 var data=JSON.stringify(adata);
-				alert(data);
                 $.ajax({
                     type:"POST",
                     contentType:"application/json",
                     data:data,
                     url:"/login/loginCheck2",
                     success:function(data) {
-     					console.log("data是："+data);
                         if (data == "NotHaveUser" || data == "PasswordError") {
                             alert("用户名或密码填写不正确");
                             $(".verifyImage").attr("src", "getVerifyCode.do");

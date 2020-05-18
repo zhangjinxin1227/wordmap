@@ -152,14 +152,12 @@
 	
 	<!-- 右键菜单 -->
 	<div id="mm" class="easyui-menu" style="width: 120px;height:auth; z-index: 99999" hidden="hidden">
-	<div data-options="iconCls:'icon-edit'" onClick="delFile()" style="height:40px;padding:10px 0;" >删除</div>
-	<div class="menu-sep"></div>
-	<div data-options="iconCls:'icon-edit'" onClick="newFile()" style="height:40px;padding:10px 0;" >新建</div>
-	<div class="menu-sep"></div>
-	<div data-options="iconCls:'icon-edit'" onClick="shareFile()" style="height:40px;padding:10px 0;" >分享</div>
-	<div class="menu-sep"></div>
-	<div data-options="iconCls:'icon-edit'" onClick="collectionFile()" style="height:40px;padding:10px 0;" >收藏</div>
-	<div class="menu-sep"></div>
+		<div data-options="iconCls:'icon-edit'" onClick="newFile()" style="height:40px;padding:10px 0;" >查看文件</div>
+		<div class="menu-sep"></div>
+		<div data-options="iconCls:'icon-edit'" onClick="delFile()" style="height:40px;padding:10px 0;" >删除文件</div>
+		<div class="menu-sep"></div>
+		<div data-options="iconCls:'icon-edit'" onClick="newFile()" style="height:40px;padding:10px 0;" >修改名称</div>
+		<div class="menu-sep"></div>
 	</div>
 	
 	<div id="isme" hidden="hidden"></div>
@@ -309,35 +307,34 @@
           	    if(data.code == 200){
           	    	var files = data.data;
 					$.each(files,function(i,a){
-						console.log("路径："+a.filePath);
 
 						if(a.fileType=="video"){
 							html+="<li class='aaa' style='text-align:center'>";
-							html+="<img src='/images/dota2/video.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover'  value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+a.filepath+"\")' >";
+							html+="<img src='/images/dota2/video.jpg' oncontextmenu='onMouseOver("+a.fileId+",\""+a.nodeId+"\")' style='width:80px;height:60px;' class='hover'  value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+a.filepath+"\")' >";
 							html+="<div>"+a.fileName+"</div>";
 							html+="</li>";
 						}else if(a.fileType=="picture"){
 
 							html+="<li class='aaa' style='text-align:center'>";
-							html+="<img src='http://"+window.location.host+""+a.filePath+"'  oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' onclick='lookBigImg(this)' >";
+							html+="<img src='http://"+window.location.host+""+a.filePath+"'  oncontextmenu='onMouseOver("+a.fileId+",\""+a.nodeId+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' onclick='lookBigImg(this)' >";
 							html+="<div>"+a.fileName+"</div>";
 							html+="</li>";
 						}else if(a.fileType=="other"){
 
 							html+="<li class='aaa' style='text-align:center'>";
-							html+="<img src='/images/dota2/other.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover ' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"viewer.html?file=https://"+window.location.host+""+a.filepath+"\")' >";
+							html+="<img src='/images/dota2/other.jpg' oncontextmenu='onMouseOver("+a.fileId+",\""+a.nodeId+"\")' style='width:80px;height:60px;' class='hover ' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"viewer.html?file=https://"+window.location.host+""+a.filepath+"\")' >";
 							html+="<div>"+a.fileName+"</div>";                                                                                                                                                                        /*  (\"pdf/generic/web/viewer.html?file=http://"+window.location.host+""+a.filepath+"\")' >";    */
 							html+="</li>";
 						}else if(a.fileType=="doc"){
 
 							html+="<li class='aaa' style='text-align:center'>";
-							html+="<img src='/images/dota2/doc.jpg' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+""+a.filepath+"\")' >";
+							html+="<img src='/images/dota2/doc.jpg' oncontextmenu='onMouseOver("+a.fileId+",\""+a.nodeId+"\")' style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='_iframe(\"http://"+window.location.host+""+a.filepath+"\")' >";
 							html+="<div>"+a.fileName+"</div>";
 							html+="</li>";
 						}else if(a.fileType=="file"){
 
 							html+="<li class='aaa' style='text-align:center'>";
-							html+="<img src='images/213125.png' oncontextmenu='onMouseOver("+a.files+",\""+a.zsdid+"\")'  style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='getAll("+a.files+","+a.f_parentid+")'>";
+							html+="<img src='images/213125.png' oncontextmenu='onMouseOver("+a.fileId+",\""+a.nodeId+"\")'  style='width:80px;height:60px;' class='hover' value='"+a.f_parentid+"' id='"+a.files+"' ondblclick='getAll("+a.files+","+a.f_parentid+")'>";
 							html+="<div>"+a.fileName+"</div>";
 							html+="</li>";
 						}
@@ -393,72 +390,16 @@
    
    <!-- 点击刷新局部页面后面的四个页面 -->
    <script type="text/javascript">
-   
-   $(function(){
-      //点击超链接局部刷新页面
-       $("#test2 a").click(function(){
-   
-          $("#function").load(this.href);
-       
-          return false;
-       
-       });
-      
-   
-   });
-   
-   </script>
-   
-   
-   
-   <!-- 新建文件夹的功能 -->
-   <script type="text/javascript">
-     //新建文件夹
-     $(function(){
-         //发送当前页面的id,并将新建文件夹的名字一并发过去
-          // window.rice=$(this).attr('value');
- 
-      $("#new").click(function(){
-    	  
- 	    var adata={"f_name":$("#newName").val(), 
-               "f_parentid":document.getElementById('show').value
-               };
-        var data=JSON.stringify(adata);
-      
-             $.ajax({
-             type:"POST",
-             contentType:"application/json",
-             dataType:"json",
-             data:data,
-             url:"saveAllFile.do",
-             
-             success:function(data){
-              
-              if(data.a==1){
-            	  getAll(0,0);
-              }else if(data.a==2){
-            	  getAll(0,0);
-              }
-              
-             },
-             
-             
-             });
-     
-      
-          });
-   
-     });
+	   $(function(){
+		  //点击超链接局部刷新页面
+		   $("#test2 a").click(function(){
+			  $("#function").load(this.href);
+			  return false;
+		   });
+	   });
 
-   
-   </script>  
-   
-     
-     
      
    <!-- 动态显示资源后面的文字 -->
-   <script type="text/javascript">
-
      $(function(){
       //动态显示后面的名字
         
@@ -488,13 +429,12 @@
    	  
       });
    </script>
-   
-  
-  
-  
+
+
+
+
   <!-- 右键菜单功能-->
   <script type="text/javascript">
-
     function onMouseOver(yaya,nodeid){     
         
     	document.getElementById('o').value=yaya;
@@ -508,45 +448,38 @@
 			}).show();
 		});
      }
-    
-  </script>
   
   
   <!-- 右键菜单中的函数  -->
-  <script type="text/javascript">
-  
        <!-- 删除文件 -->
-       function delFile(){
+	function delFile(){
 	    	
-   	       var adata={"f_id":document.getElementById('o').value};
-      	   var data=JSON.stringify(adata);  
-	      	 
-	      	   $.ajax({
-	      		 type:"POST",
-	      		 contentType:"application/json",
-	      		 dataType:"json",
-	      		 url:"deleteallfile.do",
-	      		 data:data,
-	      		 
-	      		 success:function(data){
-	      			 
-	      			 if(data.a==1){
-	      				 alert("删除成功");
-	      				 getAll(0,0);
-	      			 }else if(data.a==2){
-	      				 alert("删除失败");
-	      				 getAll(0,0);
-	      			 }
-	      		 
-	      		 },
-	      		 
-	      		 error:function(e){
-	      			 alert("连接失败");
-	      			 getAll(0,0);
-	      		 }
-	    		 
-	      	 });   
-       }
+	   var adata={"fileId":document.getElementById('o').value};
+	   console.log("adata是："+ adata.toString());
+		var data=JSON.stringify(adata);
+
+		   $.ajax({
+			 type:"POST",
+			 contentType:"application/json",
+			 dataType:"json",
+			 url:"/mindMap/delMapUpload",
+			 data:data,
+			 success:function(data){
+
+				 if(data.a==1){
+					 alert("删除成功");
+					 getAll(0,0);
+				 }else if(data.a==2){
+					 alert("删除失败");
+					 getAll(0,0);
+				 }
+			 },
+			 error:function(e){
+				 alert("连接失败");
+				 getAll(0,0);
+			 }
+		 });
+   }
 
   </script>
   
